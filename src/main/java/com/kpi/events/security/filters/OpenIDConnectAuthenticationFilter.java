@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,10 +39,14 @@ import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kpi.events.model.OpenIdConnectUserDetails;
+import com.kpi.events.model.User;
+import com.kpi.events.services.UserService;
 
 public class OpenIDConnectAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+	
+	@Autowired
+	UserService userService;
 	
 	public void setRestTemplate(OAuth2RestOperations r) {
 		restTemplate = r; 
@@ -103,7 +108,7 @@ public class OpenIDConnectAuthenticationFilter extends AbstractAuthenticationPro
 	            Map<String, String> authInfo = new ObjectMapper()
 	              .readValue(tokenDecoded.getClaims(), Map.class);
 	            verifyClaims(authInfo);
-	            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
+	            User user = new User(authInfo, accessToken);
 	            System.out.println(accessToken.getAdditionalInformation());
 	            System.out.println(accessToken.getTokenType());
 	            System.out.println(accessToken.getExpiresIn());
@@ -111,6 +116,7 @@ public class OpenIDConnectAuthenticationFilter extends AbstractAuthenticationPro
 	            System.out.println(accessToken.getRefreshToken());
 	            System.out.println(authInfo);
 	            System.out.println(user);
+	            userService.save(user);
 	            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 	        } catch (Exception e) {
 	        	e.printStackTrace();
