@@ -50,4 +50,5 @@ public class EventService implements IService<Event> {
     public List<Event> searchEventLIKEGOOGLE(String searchWord) {
         return repository.findEventByDescriptionContainingOrTitleContaining(searchWord, searchWord);
     }
+
 }
