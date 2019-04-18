@@ -10,5 +10,6 @@ import com.kpi.events.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByLogin(String login);
+    
 
 }

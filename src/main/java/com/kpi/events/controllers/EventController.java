@@ -26,6 +26,7 @@ public class EventController {
 
     @GetMapping(path = "/api/events/{id}")
     public Event getEvent(@PathVariable("id") long eventId) {
+    	
         return service.find(eventId);
     }
 

@@ -113,9 +113,7 @@ public class JwtTokenFilter extends GenericFilterBean {
 		        
 			
 			}
-			else {
-				
-			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			

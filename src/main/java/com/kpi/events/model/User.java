@@ -40,16 +40,16 @@ public class User  implements UserDetails  {
     private String password;
 
     //@NotBlank(message = "Blank first name")
-    @Size(min = 2, max = 45, message = "Wrong first name size")
-    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
+   // @Size(min = 2, max = 45, message = "Wrong first name size")
+   // @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
     @Column(name = "first_name")
-    private String firstName;
+    private String firstName = "DEF";
 
    // @NotBlank(message = "Blank second name")
-    @Size(min = 2, max = 45, message = "Wrong second name size")
-    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
+    //@Size(min = 2, max = 45, message = "Wrong second name size")
+   // @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
     @Column(name = "second_name")
-    private String secondName;
+    private String secondName = "DEF";
 
     /**
      * The users you follow

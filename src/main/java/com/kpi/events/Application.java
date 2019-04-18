@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableAutoConfiguration
 @EnableJpaRepositories(basePackages = "com.kpi.events.model.repository")
 @ComponentScan({"com.kpi.events.security", "com.kpi.events"})
 public class Application {
