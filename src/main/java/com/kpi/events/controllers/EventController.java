@@ -35,8 +35,7 @@ public class EventController {
     }
 
     @PutMapping(path = "/api/events/update/{id}")
-    public Event updateEvent(@PathVariable("id") long eventId,
-                             @RequestBody Event newEvent) {
+    public Event updateEvent(@PathVariable("id") long eventId, @RequestBody Event newEvent) {
         return service.update(eventId, newEvent);
     }
 
@@ -55,4 +54,5 @@ public class EventController {
         eventDto.setImagesLinks(service.findImageLinks(event.getId()));
         return eventDto;
     }
+
 }
