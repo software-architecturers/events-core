@@ -8,14 +8,27 @@ import java.util.Collection;
 
 @Entity
 public class Event {
+
     @Id
     @GeneratedValue
     private long id;
 
     private String title;
+
     @OneToMany
     private Collection<Image> images;
+
     private String description;
+
+    public Event() {
+    }
+
+    public Event(long id, String title, Collection<Image> images, String description) {
+        this.id = id;
+        this.title = title;
+        this.images = images;
+        this.description = description;
+    }
 
     public long getId() {
         return id;
@@ -46,16 +59,6 @@ public class Event {
     }
 
     public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Event() {
-    }
-
-    public Event(long id, String title, Collection<Image> images, String description) {
-        this.id = id;
-        this.title = title;
-        this.images = images;
         this.description = description;
     }
 }
