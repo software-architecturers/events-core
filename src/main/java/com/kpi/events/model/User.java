@@ -19,15 +19,33 @@ import java.util.Map;
 @Entity(name = "user")
 public class User  implements UserDetails  {
 
+    public User() {
+
+    }
+
+    public User(Map<String, String> userInfo, OAuth2AccessToken token) {
+        this.userIdGoogle = userInfo.get("sub");
+        this.login = userInfo.get("email");
+        this.password = userIdGoogle;
+        //this.token = token;
+    }
+
+
+
+    public User(Map<String, String> authInfo) {
+        this.userIdGoogle = authInfo.get("sub");
+        this.login = authInfo.get("email");
+    }
+
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
-    @Column(name = "id")
+    @Column
     private int id;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 8)
     private UserRole role;
-    
+
 
     private String userIdGoogle;
 
@@ -39,18 +57,17 @@ public class User  implements UserDetails  {
     @Column(name = "password", nullable = false)
     private String password;
 
-    //@NotBlank(message = "Blank first name")
+    @NotBlank(message = "Blank first name")
     @Size(min = 2, max = 45, message = "Wrong first name size")
     @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
     @Column(name = "first_name")
     private String firstName;
 
-   // @NotBlank(message = "Blank second name")
+    @NotBlank(message = "Blank second name")
     @Size(min = 2, max = 45, message = "Wrong second name size")
     @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
     @Column(name = "second_name")
     private String secondName;
-
     /**
      * The users you follow
      * (You are subscriber)
@@ -129,13 +146,43 @@ public class User  implements UserDetails  {
     public void setRole(UserRole role) {
         this.role = role;
     }
-    
+
     public void setUserId(String userId) {
     	this.userIdGoogle = userId;
     }
-    
+
     public String getUserId() {
     	return userIdGoogle;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override
@@ -151,53 +198,4 @@ public class User  implements UserDetails  {
                 ", followings=" + followings +
                 '}';
     }
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
-
-	@Override
-	public String getUsername() {
-		return login;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-	
-	
-	public User() {
-		
-	}
-	
-    public User(Map<String, String> userInfo, OAuth2AccessToken token) {
-        this.userIdGoogle = userInfo.get("sub");
-        this.login = userInfo.get("email");
-        this.password = userIdGoogle;
-        //this.token = token;
-    }
-
-	
-
-	public User(Map<String, String> authInfo) {
-		this.userIdGoogle = authInfo.get("sub");
-        this.login = authInfo.get("email");
-	}
 }

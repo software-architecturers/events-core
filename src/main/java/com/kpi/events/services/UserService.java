@@ -5,11 +5,14 @@ import static com.kpi.events.utils.Constants.WRONG_LOGIN;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
+import com.kpi.events.model.UserIn;
 import com.kpi.events.model.repository.UserRepository;
+import com.kpi.events.security.filters.JwtTokenUtil;
 
 @Service
 public class UserService implements IService<User> {
@@ -55,4 +58,27 @@ public class UserService implements IService<User> {
 		
 	}
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bcryptEncoder;
+
+    
+    public String signUp(UserIn user) {
+        User dbUser = userRepository.findByLogin(user.getLogin());
+        if (dbUser != null) {
+            throw new RuntimeException("User already exist.");
+        }
+        User userToCreate = new User();
+        userToCreate.setLogin(user.getLogin());
+        
+        userToCreate.setPassword(bcryptEncoder.encode(user.getPassword()));
+        
+        userRepository.save(userToCreate);
+        return jwtTokenUtil.generateToken(userToCreate);
+    }
 }

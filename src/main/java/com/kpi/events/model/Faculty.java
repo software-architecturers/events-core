@@ -12,11 +12,8 @@ public class Faculty {
     @Column(name = "faculty_name", nullable = false)
     private String name;
 
-//    @Column(name = "location", nullable = true)
-//    @OneToOne
-//    private Location location;
-
-    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany
     private List<Group> groups;
 
     public int getId() {
@@ -34,14 +31,6 @@ public class Faculty {
     public void setName(String name) {
         this.name = name;
     }
-//
-//    public Location getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
 
     public List<Group> getGroups() {
         return groups;

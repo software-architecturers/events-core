@@ -19,6 +19,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventByDescriptionContainingOrTitleContaining(String search, String searchInTitle);
 
 
-    @Query("select i.links from images i where id=:id")
-    List<String> findImageLinks(@Param("id") long id);
 }

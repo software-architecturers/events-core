@@ -11,5 +11,5 @@ public class Image {
     @GeneratedValue
     private long id;
 
-    private String info;
+    private String link;
 }

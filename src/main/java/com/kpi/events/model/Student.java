@@ -16,9 +16,6 @@ public class Student {
 
     @NotNull
     private long studentTicket;
-//
-//    @ManyToOne
-//    private Group group;
 
     public User getUser() {
         return user;
