@@ -2,14 +2,13 @@ package com.kpi.events.security.filters;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
-import com.kpi.events.model.GoogleOAuth2UserInfo;
+import com.kpi.events.model.UserOAuth2GoogleDto;
 import com.kpi.events.model.User;
 import com.kpi.events.model.repository.UserRepository;
 
@@ -26,7 +25,7 @@ public class CustomOidcUserService extends OidcUserService {
         System.out.println("load");
     	OidcUser oidcUser = super.loadUser(userRequest);
         Map<String, Object> attributes = oidcUser.getAttributes();
-        GoogleOAuth2UserInfo userInfo = new GoogleOAuth2UserInfo();
+        UserOAuth2GoogleDto userInfo = new UserOAuth2GoogleDto();
         userInfo.setEmail((String) attributes.get("email"));
         userInfo.setId((String) attributes.get("sub"));
         userInfo.setImageUrl((String) attributes.get("picture"));
@@ -36,7 +35,7 @@ public class CustomOidcUserService extends OidcUserService {
         return oidcUser;
     }
 
-    private void updateUser(GoogleOAuth2UserInfo userInfo) {
+    private void updateUser(UserOAuth2GoogleDto userInfo) {
         System.out.println("update");
         User user = userRepository.findByLogin(userInfo.getEmail());
         if(user == null) {

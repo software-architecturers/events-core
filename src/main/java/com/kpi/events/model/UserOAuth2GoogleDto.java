@@ -1,6 +1,6 @@
 package com.kpi.events.model;
 
-public class GoogleOAuth2UserInfo {
+public class UserOAuth2GoogleDto {
 
     private String id;
     private String name;

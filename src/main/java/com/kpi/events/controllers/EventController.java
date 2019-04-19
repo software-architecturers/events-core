@@ -54,5 +54,4 @@ public class EventController {
         eventDto.setImagesLinks(service.findImageLinks(event.getId()));
         return eventDto;
     }
-
 }

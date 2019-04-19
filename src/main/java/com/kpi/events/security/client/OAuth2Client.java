@@ -29,8 +29,9 @@ public class OAuth2Client {
     @Value("${google.oauth2.clientSecret}")
     private String clientSecret;
 
-    private String redirectUri = "http://localhost:8080/google-login";
- 
+    @Value("${google.redirectUri}")
+    private static String redirectUri;
+
     @Bean
     // TODO retrieve from https://accounts.google.com/.well-known/openid-configuration ?
     public OAuth2ProtectedResourceDetails googleOAuth2Details() {

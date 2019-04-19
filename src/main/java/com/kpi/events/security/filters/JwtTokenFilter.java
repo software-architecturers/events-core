@@ -3,7 +3,6 @@ package com.kpi.events.security.filters;
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -13,10 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
@@ -30,11 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kpi.events.model.User;
 import com.kpi.events.services.UserService;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 
 public class JwtTokenFilter extends GenericFilterBean {
@@ -81,14 +73,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     public JwtTokenFilter() {
        
     }
-    
-  /*  public Authentication getAuthentication(String token) {
-        //UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-    	OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(getUsername(token), token);
-        
-    	return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-    }
-*/
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
         throws IOException, ServletException {
@@ -98,8 +83,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         String token = resolveToken((HttpServletRequest) req);
         try {
 			if (token != null && validateToken(token) ) {
-				System.out.println("FILTER 1 Found "+ token);
-				//System.out.println("FILTER 1 Found "+ getUsername(token));
+
 				System.out.println("FILTER 1 Found "+ getSubject(token));
 				String kid = JwtHelper.headers(token).get("kid");
 				
