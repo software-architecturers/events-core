@@ -40,8 +40,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         if (user == null) {
         	user = new User();
         	user.setLogin(email);
-            
         	user.setPassword("def");
+        	userRepository.save(user);
         }
         String token = jwtTokenUtil.generateToken(user);
         String redirectionUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/home")
