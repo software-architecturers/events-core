@@ -12,4 +12,27 @@ public class Image {
     private long id;
 
     private String link;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public Image() {
+    }
+
+    public Image(String link) {
+        this.link = link;
+    }
 }

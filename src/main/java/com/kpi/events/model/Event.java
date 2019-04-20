@@ -1,9 +1,6 @@
 package com.kpi.events.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -15,10 +12,11 @@ public class Event {
 
     private String title;
 
-    @OneToMany
+    private String description;
+
+    @OneToMany(cascade= CascadeType.ALL)
     private Collection<Image> images;
 
-    private String description;
 
     public Event() {
     }
