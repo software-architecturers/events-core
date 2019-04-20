@@ -25,7 +25,8 @@ public class EventController {
     }
 
     @GetMapping("/api/events")
-    public List<Event> getEvents(@RequestParam int limit, @RequestParam int page) {
+    public List<Event> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
+                                 @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
     }
 
