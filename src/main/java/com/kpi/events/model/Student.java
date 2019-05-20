@@ -5,25 +5,25 @@ import javax.validation.constraints.NotNull;
 //TODO: add one-to-many annotation
 //TODO: add table annotation
 
-@Entity
+//@Entity
 public class Student {
 
-    @OneToOne
-    private User user;
+//    @OneToOne
+//    private User user;
 
-    @Id
+//    @Id
     private int id;
 
-    @NotNull
+//    @NotNull
     private long studentTicket;
 
-    public User getUser() {
-        return user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public int getId() {
         return id;

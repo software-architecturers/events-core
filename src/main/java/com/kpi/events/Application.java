@@ -1,19 +1,21 @@
 package com.kpi.events;
 
+import com.kpi.events.model.files.FileStorageProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.kpi.events.model.repository")
-@ComponentScan({"com.kpi.events.security", "com.kpi.events"})
+@EnableConfigurationProperties({
+        FileStorageProperties.class
+})
 public class Application {
 
     @Bean
@@ -23,7 +25,7 @@ public class Application {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
+        return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**");
@@ -35,4 +37,3 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 }
-

@@ -3,17 +3,17 @@ package com.kpi.events.model;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
+//@Entity
 public class Group {
 
-    @Id
-    @GeneratedValue
+//    @Id
+//    @GeneratedValue
     private int id;
 
-    @Column
+//    @Column
     private String name;
 
-    @ManyToOne
+//    @ManyToOne
 //    @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 

@@ -15,9 +15,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@Table(name = "user")
-@Entity(name = "user")
-public class User  implements UserDetails  {
+
+@Entity
+public class User implements UserDetails  {
 
     public User() {
 
@@ -49,24 +49,24 @@ public class User  implements UserDetails  {
 
     private String userIdGoogle;
 
-    @NotBlank(message = "Blank login")
-    @Size(min = 2, max = 45, message = "Wrong login size")
+//    @NotBlank(message = "Blank login")
+//    @Size(min = 2, max = 45, message = "Wrong login size")
     @Column(name = "login", unique = true, nullable = false)
     private String login;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @NotBlank(message = "Blank first name")
-    @Size(min = 2, max = 45, message = "Wrong first name size")
-    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
+//    @NotBlank(message = "Blank first name")
+//    @Size(min = 2, max = 45, message = "Wrong first name size")
+//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
     @Column(name = "first_name")
     private String firstName;
-
-    @NotBlank(message = "Blank second name")
-    @Size(min = 2, max = 45, message = "Wrong second name size")
-    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
-    @Column(name = "second_name")
+//
+//    @NotBlank(message = "Blank second name")
+//    @Size(min = 2, max = 45, message = "Wrong second name size")
+//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
+//    @Column(name = "second_name")
     private String secondName;
     /**
      * The users you follow

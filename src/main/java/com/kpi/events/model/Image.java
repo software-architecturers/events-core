@@ -13,6 +13,13 @@ public class Image {
 
     private String link;
 
+    public Image() {
+    }
+
+    public Image(String link) {
+        this.link = link;
+    }
+
     public long getId() {
         return id;
     }
@@ -26,13 +33,6 @@ public class Image {
     }
 
     public void setLink(String link) {
-        this.link = link;
-    }
-
-    public Image() {
-    }
-
-    public Image(String link) {
         this.link = link;
     }
 }

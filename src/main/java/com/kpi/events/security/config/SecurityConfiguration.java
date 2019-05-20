@@ -52,15 +52,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .passwordEncoder(encoder());
     }
 
-    @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean() {
-        return new JwtAuthenticationFilter();
-    }
+//    @Bean
+//    public JwtAuthenticationFilter authenticationTokenFilterBean() {
+//        return new JwtAuthenticationFilter();
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().
-                antMatchers("/**", "/webjars/**").permitAll()
+        http.authorizeRequests().
+                antMatchers("/auth/**", "/webjars/**", "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
@@ -75,12 +75,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(customAuthorizationRequestRepository())
-                .and()
-                .successHandler(customAuthenticationSuccessHandler);
+                .authorizationRequestRepository(customAuthorizationRequestRepository());
+//                .and()
+//                .successHandler(customAuthenticationSuccessHandler);
 
-        http
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//        http
+//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
     }
 

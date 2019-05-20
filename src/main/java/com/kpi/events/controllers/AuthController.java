@@ -15,11 +15,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/auth/custom-login")
-    public String login() {
-        System.out.println("login");
-        return "login";
-    }
 
     @PostMapping("/auth/signup")
     public String signup(UserIn user) {

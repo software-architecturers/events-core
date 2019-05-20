@@ -1,5 +1,6 @@
 package com.kpi.events.security.filters;
 
+import com.kpi.events.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.kpi.events.model.User;
 import static com.kpi.events.security.filters.Constants.*;
 import java.io.Serializable;
 import java.util.Arrays;

@@ -3,17 +3,17 @@ package com.kpi.events.model;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+//@Entity
 public class Faculty {
-    @Id
-    @GeneratedValue
+//    @Id
+//    @GeneratedValue
     private int id;
 
-    @Column(name = "faculty_name", nullable = false)
+//    @Column(name = "faculty_name", nullable = false)
     private String name;
 
 //    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OneToMany
+//    @OneToMany
     private List<Group> groups;
 
     public int getId() {
