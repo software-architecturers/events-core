@@ -29,6 +29,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private OidcUserService oidcUserService;
 
+    @Bean
+    public OidcUserService oidcUserService() {
+        return new OidcUserService();
+    }
+
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
@@ -52,16 +57,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .passwordEncoder(encoder());
     }
 
-//    @Bean
-//    public JwtAuthenticationFilter authenticationTokenFilterBean() {
-//        return new JwtAuthenticationFilter();
-//    }
+    @Bean
+    public JwtAuthenticationFilter authenticationTokenFilterBean() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().
-                antMatchers("/auth/**", "/webjars/**", "/**").permitAll()
-                .anyRequest().authenticated()
+//                antMatchers("/auth/**", "/webjars/**", "/**").permitAll()
+//                .anyRequest().authenticated()
+        anyRequest().permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -75,12 +81,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(customAuthorizationRequestRepository());
-//                .and()
-//                .successHandler(customAuthenticationSuccessHandler);
+                .authorizationRequestRepository(customAuthorizationRequestRepository())
+                .and()
+                .successHandler(customAuthenticationSuccessHandler);
 
-//        http
-//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
     }
 
