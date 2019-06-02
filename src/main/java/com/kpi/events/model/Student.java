@@ -1,51 +1,55 @@
 package com.kpi.events.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-//TODO: add one-to-many annotation
-//TODO: add table annotation
+import org.springframework.beans.factory.annotation.Lookup;
 
-//@Entity
+import javax.persistence.*;
+import java.util.Optional;
+
+@Entity
 public class Student {
 
-//    @OneToOne
-//    private User user;
+    @Id
+    private long id;
 
-//    @Id
-    private int id;
+    @OneToOne
+    private User user;
 
-//    @NotNull
-    private long studentTicket;
+    @ManyToOne
+    private Faculty faculty;
 
-//    public User getUser() {
-//        return user;
-//    }
+    @ManyToOne
+    private Hostel hostel;
 
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public long getStudentTicket() {
-        return studentTicket;
+    public User getUser() {
+        return user;
     }
 
-    public void setStudentTicket(long studentTicket) {
-        this.studentTicket = studentTicket;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-//    public Group getGroup() {
-//        return group;
-//    }
-//
-//    public void setGroup(Group group) {
-//        this.group = group;
-//    }
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+    public Hostel getHostel() {
+        return Optional.ofNullable(hostel)
+                .orElse(new Hostel());
+    }
+
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
+    }
 }

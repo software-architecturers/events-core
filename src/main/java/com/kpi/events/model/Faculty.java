@@ -1,20 +1,52 @@
 package com.kpi.events.model;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-//@Entity
+@Entity
 public class Faculty {
-//    @Id
-//    @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    @Column(name = "faculty_name", nullable = false)
+    private int facultyNumber;
+
+    //    @Column(name = "faculty_name", nullable = false)
     private String name;
+
+    private String imageName;
+
+    private String deaneryNumber;
 
 //    @OneToMany(mappedBy = "faculty", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @OneToMany
-    private List<Group> groups;
+//    private List<Group> groups;
+
+    public int getFacultyNumber() {
+        return facultyNumber;
+    }
+
+    public void setFacultyNumber(int facultyNumber) {
+        this.facultyNumber = facultyNumber;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getDeaneryNumber() {
+        return deaneryNumber;
+    }
+
+    public void setDeaneryNumber(String deaneryNumber) {
+        this.deaneryNumber = deaneryNumber;
+    }
 
     public int getId() {
         return id;
@@ -30,13 +62,5 @@ public class Faculty {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
     }
 }

@@ -1,10 +1,7 @@
 package com.kpi.events.controllers;
 
-import com.kpi.events.model.Image;
 import com.kpi.events.model.dto.file.UploadFileResponse;
 import com.kpi.events.services.FileStorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +28,7 @@ public class ImageController {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/getImage/")
                 .path(fileName)
                 .toUriString();
 
@@ -47,7 +44,7 @@ public class ImageController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
+    @GetMapping("/getImage/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);

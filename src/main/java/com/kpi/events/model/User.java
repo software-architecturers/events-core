@@ -3,21 +3,58 @@ package com.kpi.events.model;
 import com.kpi.events.enums.UserRole;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 
 @Entity
-public class User implements UserDetails  {
+public class User implements UserDetails {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column
+    private long id;
+
+    private String userIdGoogle;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 8)
+    private UserRole role;
+
+    //    @NotBlank(message = "Blank login")
+//    @Size(min = 2, max = 45, message = "Wrong login size")
+    @Column(name = "login", unique = true, nullable = false)
+    private String login;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    private String email;
+
+    //    @NotBlank(message = "Blank first name")
+//    @Size(min = 2, max = 45, message = "Wrong first name size")
+//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
+    @Column(name = "first_name")
+    private String firstName;
+    //
+//    @NotBlank(message = "Blank second name")
+//    @Size(min = 2, max = 45, message = "Wrong second name size")
+//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
+//    @Column(name = "second_name")
+    private String secondName;
 
     public User() {
 
@@ -31,75 +68,12 @@ public class User implements UserDetails  {
     }
 
 
-
     public User(Map<String, String> authInfo) {
         this.userIdGoogle = authInfo.get("sub");
         this.login = authInfo.get("email");
     }
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Id
-    @Column
-    private int id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 8)
-    private UserRole role;
-
-
-    private String userIdGoogle;
-
-//    @NotBlank(message = "Blank login")
-//    @Size(min = 2, max = 45, message = "Wrong login size")
-    @Column(name = "login", unique = true, nullable = false)
-    private String login;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-//    @NotBlank(message = "Blank first name")
-//    @Size(min = 2, max = 45, message = "Wrong first name size")
-//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in first name")
-    @Column(name = "first_name")
-    private String firstName;
-//
-//    @NotBlank(message = "Blank second name")
-//    @Size(min = 2, max = 45, message = "Wrong second name size")
-//    @Pattern(regexp = "[A-Z]", message = "Wrong syntax in second name")
-//    @Column(name = "second_name")
-    private String secondName;
-    /**
-     * The users you follow
-     * (You are subscriber)
-     */
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<User> followings;
-
-    /**
-     * The users follow you
-     * (Your subscribers)
-     */
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<User> followers;
-
-
-    public List<User> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(List<User> followers) {
-        this.followers = followers;
-    }
-
-    public List<User> getFollowings() {
-        return followings;
-    }
-
-    public void setFollowings(List<User> followings) {
-        this.followings = followings;
-    }
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -148,11 +122,11 @@ public class User implements UserDetails  {
     }
 
     public void setUserId(String userId) {
-    	this.userIdGoogle = userId;
+        this.userIdGoogle = userId;
     }
 
     public String getUserId() {
-    	return userIdGoogle;
+        return userIdGoogle;
     }
 
     @Override
@@ -186,16 +160,40 @@ public class User implements UserDetails  {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (role != user.role) return false;
+        if (login != null ? !login.equals(user.login) : user.login != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
+        return secondName != null ? secondName.equals(user.secondName) : user.secondName == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = role != null ? role.hashCode() : 0;
+        result = 31 * result + (login != null ? login.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (secondName != null ? secondName.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", userIdGoogle='" + userIdGoogle + '\'' +
+                ", role=" + role +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", role=" + role +
-                ", followers=" + followers +
-                ", followings=" + followings +
                 '}';
     }
 }
