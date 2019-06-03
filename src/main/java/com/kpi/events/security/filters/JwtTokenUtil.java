@@ -45,13 +45,13 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(User user) {
-        return doGenerateToken(user.getLogin());
+        return doGenerateToken(user);
     }
 
-    private String doGenerateToken(String subject) {
+    private String doGenerateToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(subject);
-        claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        Claims claims = Jwts.claims().setSubject(user.getLogin());
+        claims.put("scopes", user.getAuthorities());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -62,10 +62,10 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, User userDetails) {
         final String username = getUsernameFromToken(token);
         return (
-                username.equals(userDetails.getUsername())
+                username.equals(userDetails.getLogin())
                         && !isTokenExpired(token));
     }
 

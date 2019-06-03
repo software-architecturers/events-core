@@ -5,11 +5,15 @@ import com.kpi.events.enums.UserRole;
 import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -72,6 +76,17 @@ public class User implements UserDetails {
         this.userIdGoogle = authInfo.get("sub");
         this.login = authInfo.get("email");
     }
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> priveleges = new ArrayList<>();
+    
+    public List<String> getPriveleges() {
+    	return priveleges;
+    }
+    
+    public void setPriveleges(List<String> priveleges) {
+    	this.priveleges = priveleges;
+    }
 
     public long getId() {
         return id;
@@ -131,8 +146,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.priveleges.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
+
 
     @Override
     public String getUsername() {

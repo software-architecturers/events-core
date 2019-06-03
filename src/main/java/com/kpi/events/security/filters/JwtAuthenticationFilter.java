@@ -10,6 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.kpi.events.model.User;
+import com.kpi.events.model.repository.UserRepository;
+import com.kpi.events.services.UserService;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +26,7 @@ import java.util.Arrays;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserRepository repository;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -54,13 +59,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            User user = repository.findByLogin(username);
 
-            if (jwtTokenUtil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            if (jwtTokenUtil.validateToken(token, user)) {
+                TokenAuthentication authentication = new TokenAuthentication(token ,user.getAuthorities(), true, user);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 logger.info("authenticated user " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                
             }
         }
 

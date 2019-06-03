@@ -2,6 +2,8 @@ package com.kpi.events.services;
 
 import static com.kpi.events.utils.Constants.WRONG_LOGIN;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +68,10 @@ public class UserService implements IService<User> {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
-
     
-    public String signUp(UserIn user) {
+ 
+    
+    public String signUp(User user) {
         User dbUser = userRepository.findByLogin(user.getLogin());
         if (dbUser != null) {
             throw new RuntimeException("User already exist.");
@@ -80,5 +83,28 @@ public class UserService implements IService<User> {
         
         userRepository.save(userToCreate);
         return jwtTokenUtil.generateToken(userToCreate);
+    }
+    
+    
+    public String login(User user) {
+        User dbUser = userRepository.findByLogin(user.getLogin());
+        if (dbUser == null) {
+            throw new RuntimeException("No user with given cred exists");
+        }
+        
+        if(!user.getPassword().equals(dbUser.getPassword())) {
+        	throw new RuntimeException("No user with given cred exists");
+        }
+        
+        return jwtTokenUtil.generateToken(dbUser);
+    }
+    
+    public void register(User user){
+    	
+    	user.setPriveleges(new ArrayList<String>(Arrays.asList("READ_EVENTS", "WRITE_EVENTS")));
+    	System.out.println(user);
+    	save(user);
+    	
+    	
     }
 }

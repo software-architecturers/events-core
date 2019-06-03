@@ -64,10 +64,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
-//                antMatchers("/auth/**", "/webjars/**", "/**").permitAll()
-//                .anyRequest().authenticated()
-/*        anyRequest().permitAll()
+    //    http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
+    	http.authorizeRequests()
+                .anyRequest().authenticated()
+    	
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -87,7 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-*/
+
     }
 
     @Bean
