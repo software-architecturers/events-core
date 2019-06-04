@@ -1,4 +1,4 @@
-package com.kpi.events.security.filters;
+package com.kpi.events.security.models;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

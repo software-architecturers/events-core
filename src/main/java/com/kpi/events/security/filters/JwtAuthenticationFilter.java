@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kpi.events.model.User;
 import com.kpi.events.model.repository.UserRepository;
+import com.kpi.events.security.models.TokenAuthentication;
 import com.kpi.events.services.UserService;
 
 import javax.servlet.FilterChain;
@@ -31,18 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-
-    public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String token = resolveToken(req);
+        String token = jwtTokenUtil.resolveToken(req);
         String username = null;
         if (token != null) {
             try {

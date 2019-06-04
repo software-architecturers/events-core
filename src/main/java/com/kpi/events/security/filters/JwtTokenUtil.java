@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 
 @Component
@@ -67,6 +69,14 @@ public class JwtTokenUtil implements Serializable {
         return (
                 username.equals(userDetails.getLogin())
                         && !isTokenExpired(token));
+    }
+    
+    public String resolveToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
 }

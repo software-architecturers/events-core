@@ -1,5 +1,5 @@
 package com.kpi.events.services;
-
+/*
 import com.kpi.events.model.Student;
 import com.kpi.events.model.StudentIn;
 import com.kpi.events.model.User;
@@ -69,3 +69,4 @@ public class StudentService implements IService<Student> {
 
     }
 }
+*/

@@ -15,6 +15,10 @@ import com.kpi.events.model.User;
 import com.kpi.events.model.UserIn;
 import com.kpi.events.model.repository.UserRepository;
 import com.kpi.events.security.filters.JwtTokenUtil;
+import com.kpi.events.security.models.Token;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 
 @Service
 public class UserService implements IService<User> {
@@ -107,4 +111,26 @@ public class UserService implements IService<User> {
     	
     	
     }
+
+	public String refresh(Token tokenIn) {
+		
+		String username = null;
+		String token = tokenIn.getToken();
+        if (token != null) {
+            try {
+                username = jwtTokenUtil.getUsernameFromToken(token);
+            } catch (IllegalArgumentException e) {
+                System.out.println("an error occured during getting username from token" + e);
+            } catch (ExpiredJwtException e) {
+            	System.out.println("the token is expired and not valid anymore" + e);
+            } catch(SignatureException e){
+            	System.out.println("Authentication Failed. Username or Password not valid.");
+            }
+        } else {
+        	System.out.println("couldn't find bearer string, will ignore the header");
+        }
+        User user = repository.findByLogin(username);
+        
+		return jwtTokenUtil.generateToken(user);
+	}
 }
