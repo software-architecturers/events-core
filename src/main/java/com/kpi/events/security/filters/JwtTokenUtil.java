@@ -20,11 +20,18 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtil implements Serializable {
+	
+	
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
+    public Long getRefreshIdFromToken(String token) {
+    	 final Claims claims = getAllClaimsFromToken(token);
+    	 return (Long) claims.get("refreshId");
+    }
+    
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -54,7 +61,8 @@ public class JwtTokenUtil implements Serializable {
 
         Claims claims = Jwts.claims().setSubject(user.getLogin());
         claims.put("scopes", user.getAuthorities());
-
+        claims.put("refreshId", user.getRefreshId());
+        
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("https://devglan.com")

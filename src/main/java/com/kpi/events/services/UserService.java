@@ -5,6 +5,7 @@ import static com.kpi.events.utils.Constants.WRONG_LOGIN;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,6 +37,11 @@ public class UserService implements IService<User> {
 	public User save(User entity) {
 		if(find(entity.getLogin())!= null)
 			throw new RuntimeException("User already exists");
+		long x = 1000L;
+		long y = 999999999999L;
+		Random r = new Random();
+		long number = x+((long)(r.nextDouble()*(y-x)));
+		entity.setResfreshId(number);
 		return repository.save(entity);
 		
 	}
@@ -43,6 +49,7 @@ public class UserService implements IService<User> {
 	@Override
 	public User find(long id) {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -85,7 +92,7 @@ public class UserService implements IService<User> {
         
         userToCreate.setPassword(bcryptEncoder.encode(user.getPassword()));
         
-        userRepository.save(userToCreate);
+        save(userToCreate);
         return jwtTokenUtil.generateToken(userToCreate);
     }
     
@@ -116,21 +123,31 @@ public class UserService implements IService<User> {
 		
 		String username = null;
 		String token = tokenIn.getToken();
+		long refreshId = 0;
         if (token != null) {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(token);
+                refreshId = jwtTokenUtil.getRefreshIdFromToken(token);
             } catch (IllegalArgumentException e) {
                 System.out.println("an error occured during getting username from token" + e);
             } catch (ExpiredJwtException e) {
             	System.out.println("the token is expired and not valid anymore" + e);
+            	System.out.println("refreshID " + e.getClaims().get("refreshId"));
+            	refreshId = (Long) e.getClaims().get("refreshId");
             } catch(SignatureException e){
             	System.out.println("Authentication Failed. Username or Password not valid.");
             }
         } else {
         	System.out.println("couldn't find bearer string, will ignore the header");
         }
-        User user = repository.findByLogin(username);
-        
+        User user = repository.findByRefreshId(refreshId);
+        user.updateRefreshId();
+        repository.save(user);
+        if(!jwtTokenUtil.validateToken(token, user))
+        	return "";
+        if(user==null) {
+        	return "";
+        }
 		return jwtTokenUtil.generateToken(user);
 	}
 }

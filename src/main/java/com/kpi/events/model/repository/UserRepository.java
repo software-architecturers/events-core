@@ -7,6 +7,8 @@ import com.kpi.events.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByLogin(String login);
+    
+    User findByRefreshId(long refreshId);
 
     User findByLoginAndPassword(String login, String password);
 }

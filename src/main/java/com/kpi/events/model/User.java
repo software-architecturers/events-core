@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 
@@ -23,6 +24,8 @@ public class User implements UserDetails {
     @Id
     @Column
     private long id;
+    
+    long refreshId;
 
     private String userIdGoogle;
 
@@ -143,6 +146,14 @@ public class User implements UserDetails {
     public String getUserId() {
         return userIdGoogle;
     }
+    
+    public void setResfreshId(long value) {
+    	this.refreshId = value;
+    }
+    
+    public long getRefreshId() {
+    	return refreshId;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -212,4 +223,14 @@ public class User implements UserDetails {
                 ", secondName='" + secondName + '\'' +
                 '}';
     }
+    
+    public void updateRefreshId() {
+    	long x = 1000L;
+		long y = 999999999999L;
+		Random r = new Random();
+		long number = x+((long)(r.nextDouble()*(y-x)));
+		setResfreshId(number);
+    }
+    
+    
 }
