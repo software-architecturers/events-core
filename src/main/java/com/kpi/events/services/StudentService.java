@@ -1,5 +1,6 @@
 package com.kpi.events.services;
 
+import com.kpi.events.exceptions.UserNotFoundException;
 import com.kpi.events.model.Student;
 import com.kpi.events.model.StudentIn;
 import com.kpi.events.model.User;
@@ -52,9 +53,9 @@ public class StudentService implements IService<Student> {
         String password = student.getPassword();
 
         User user = userRepository.findByLoginAndPassword(login, password);
-//        if (user == null) {
-//            return null;
-//        }
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
 
         Student studentByUser = repository.findStudentByUser(user);
         StudentDto studentDto = new StudentDto();
