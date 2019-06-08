@@ -36,9 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         String token = jwtTokenUtil.resolveToken(req);
         String username = null;
+        long id = 0;
         if (token != null) {
             try {
-                username = jwtTokenUtil.getUsernameFromToken(token);
+                //username = jwtTokenUtil.getUsernameFromToken(token);
+                id = jwtTokenUtil.getIdFromToken(token);
             } catch (IllegalArgumentException e) {
                 logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
@@ -49,9 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else {
             logger.warn("couldn't find bearer string, will ignore the header");
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (id != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            User user = repository.findByLogin(username);
+            User user = repository.findById(id);
 
             if (jwtTokenUtil.validateToken(token, user)) {
                 TokenAuthentication authentication = new TokenAuthentication(token ,user.getAuthorities(), true, user);

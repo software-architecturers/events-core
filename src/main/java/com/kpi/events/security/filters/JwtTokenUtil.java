@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,8 +24,8 @@ public class JwtTokenUtil implements Serializable {
 	
 	
 
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public long getIdFromToken(String token) {
+        return Long.parseLong(getClaimFromToken(token, Claims::getSubject));
     }
 
     public Long getRefreshIdFromToken(String token) {
@@ -59,8 +60,8 @@ public class JwtTokenUtil implements Serializable {
 
     private String doGenerateToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(user.getLogin());
-        claims.put("scopes", user.getAuthorities());
+        Claims claims = Jwts.claims().setSubject(Long.toString(user.getId()));//TODO: getId
+        claims.put("scopes", user.getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()));
         claims.put("refreshId", user.getRefreshId());
         
         return Jwts.builder()
@@ -73,10 +74,8 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public Boolean validateToken(String token, User userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (
-                username.equals(userDetails.getLogin())
-                        && !isTokenExpired(token));
+        final long id = getIdFromToken(token);
+        return id == userDetails.getId() && !isTokenExpired(token);
     }
     
     public String resolveToken(HttpServletRequest req) {

@@ -2,6 +2,8 @@ package com.kpi.events.model;
 
 import com.kpi.events.enums.UserRole;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 
 @Entity
+@Data
 public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,7 @@ public class User implements UserDetails {
     @Column
     private long id;
     
-    long refreshId;
+    String refreshId;
 
     private String userIdGoogle;
 
@@ -147,13 +150,7 @@ public class User implements UserDetails {
         return userIdGoogle;
     }
     
-    public void setResfreshId(long value) {
-    	this.refreshId = value;
-    }
-    
-    public long getRefreshId() {
-    	return refreshId;
-    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -223,14 +220,7 @@ public class User implements UserDetails {
                 ", secondName='" + secondName + '\'' +
                 '}';
     }
-    
-    public void updateRefreshId() {
-    	long x = 1000L;
-		long y = 999999999999L;
-		Random r = new Random();
-		long number = x+((long)(r.nextDouble()*(y-x)));
-		setResfreshId(number);
-    }
+   
     
     
 }
