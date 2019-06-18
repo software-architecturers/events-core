@@ -27,7 +27,7 @@ services:
     restart: always
     depends_on:
       - db
-d
+      
 volumes:
   events-core-db:
     driver: local
