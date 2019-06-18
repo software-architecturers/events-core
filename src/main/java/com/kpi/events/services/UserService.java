@@ -129,7 +129,7 @@ public class UserService implements IService<User> {
 		
 		//String username = null;
 		String token = tokenIn.getToken();
-		long refreshId = 0;
+		String refreshId = "";
         if (token != null) {
             try {
                 //username = jwtTokenUtil.getUsernameFromToken(token);
@@ -139,7 +139,7 @@ public class UserService implements IService<User> {
             } catch (ExpiredJwtException e) {
             	System.out.println("the token is expired and not valid anymore" + e);
             	System.out.println("refreshID " + e.getClaims().get("refreshId"));
-            	refreshId = (Long) e.getClaims().get("refreshId");
+            	refreshId = (String) e.getClaims().get("refreshId");
             } catch(SignatureException e){
             	System.out.println("Authentication Failed. Username or Password not valid.");
             }

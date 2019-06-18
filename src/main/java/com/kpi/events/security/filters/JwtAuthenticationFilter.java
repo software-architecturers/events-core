@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kpi.events.model.User;
 import com.kpi.events.model.repository.UserRepository;
+import com.kpi.events.security.models.ExpiredException;
 import com.kpi.events.security.models.TokenAuthentication;
 import com.kpi.events.services.UserService;
 
@@ -35,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         String token = jwtTokenUtil.resolveToken(req);
+        boolean isCont = true;
         String username = null;
         long id = 0;
         if (token != null) {
@@ -45,6 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
                 logger.warn("the token is expired and not valid anymore", e);
+                res.setStatus(401);
+                res.getWriter().write("{\"status\": \"expired\"}");
+                isCont = false;
             } catch(SignatureException e){
                 logger.error("Authentication Failed. Username or Password not valid.");
             }
@@ -63,7 +68,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
             }
         }
-
-        chain.doFilter(req, res);
+        if(isCont) {
+        	chain.doFilter(req, res);
+        }
     }
 }

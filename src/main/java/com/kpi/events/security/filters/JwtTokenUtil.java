@@ -28,9 +28,9 @@ public class JwtTokenUtil implements Serializable {
         return Long.parseLong(getClaimFromToken(token, Claims::getSubject));
     }
 
-    public Long getRefreshIdFromToken(String token) {
+    public String getRefreshIdFromToken(String token) {
     	 final Claims claims = getAllClaimsFromToken(token);
-    	 return (Long) claims.get("refreshId");
+    	 return (String) claims.get("refreshId");
     }
     
     public Date getExpirationDateFromToken(String token) {
