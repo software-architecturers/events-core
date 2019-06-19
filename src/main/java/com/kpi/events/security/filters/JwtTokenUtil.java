@@ -63,6 +63,7 @@ public class JwtTokenUtil implements Serializable {
         Claims claims = Jwts.claims().setSubject(Long.toString(user.getId()));//TODO: getId
         claims.put("scopes", user.getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()));
         claims.put("refreshId", user.getRefreshId());
+        claims.put("name", user.getLogin());
         
         return Jwts.builder()
                 .setClaims(claims)
