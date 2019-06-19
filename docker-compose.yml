@@ -14,7 +14,9 @@ services:
 
   events-core:
     image: events-core:latest
-    build: '.'
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile'
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/kpi_events?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     logging:
