@@ -25,9 +25,4 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         response.sendError(403, "Not authorized");
     }
     
-    @ExceptionHandler (value = {ExpiredJwtException.class})
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-    		ExpiredJwtException accessDeniedException) throws IOException {
-      response.sendError(401, "ExpiredToken");
-    }
 }

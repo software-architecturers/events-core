@@ -18,6 +18,8 @@ import com.kpi.events.security.models.RegisterDTO;
 import com.kpi.events.security.models.Token;
 import com.kpi.events.services.UserService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 
 @RestController
 public class AuthController {
@@ -66,6 +68,11 @@ public class AuthController {
     @GetMapping("/auth/suc")
     public String successful() {
         return "suc";
+    }
+    
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<?> handleExpred(ExpiredJwtException e) {
+    	return ResponseEntity.status(401).body("{\"error\": \"" + e.getMessage() + "\"}");
     }
     
     @ExceptionHandler({RuntimeException.class})
