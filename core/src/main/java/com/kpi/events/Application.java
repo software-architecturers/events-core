@@ -10,13 +10,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.kpi.events.model.repository")
 @EnableConfigurationProperties({
         FileStorageProperties.class
 })
 public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
     @Bean
     public ModelMapper modelMapper() {
@@ -31,9 +34,5 @@ public class Application {
                 registry.addMapping("/**");
             }
         };
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
     }
 }

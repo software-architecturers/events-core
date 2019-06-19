@@ -5,12 +5,14 @@ import com.kpi.events.model.StudentIn;
 import com.kpi.events.model.dto.StudentDto;
 import com.kpi.events.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@ConditionalOnProperty(name = "features.students")
 public class StudentController {
 
     @Autowired

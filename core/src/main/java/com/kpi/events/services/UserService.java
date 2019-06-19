@@ -1,14 +1,9 @@
 package com.kpi.events.services;
 
-import static com.kpi.events.utils.Constants.WRONG_LOGIN;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
 import com.kpi.events.model.UserIn;
 import com.kpi.events.model.repository.UserRepository;

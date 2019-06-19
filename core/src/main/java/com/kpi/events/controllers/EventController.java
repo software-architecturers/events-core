@@ -5,12 +5,14 @@ import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.services.EventService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
+@ConditionalOnProperty(name = "features.events")
 public class EventController {
 
     @Autowired
