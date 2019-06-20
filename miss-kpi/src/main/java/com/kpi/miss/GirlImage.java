@@ -1,9 +1,6 @@
 package com.kpi.miss;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class GirlImage {
@@ -11,6 +8,17 @@ public class GirlImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @ManyToOne
+    private MissKpiEntity girl;
+
+    public MissKpiEntity getGirl() {
+        return girl;
+    }
+
+    public void setGirl(MissKpiEntity girl) {
+        this.girl = girl;
+    }
 
     private String link;
 

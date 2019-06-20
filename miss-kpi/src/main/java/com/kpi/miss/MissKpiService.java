@@ -1,5 +1,6 @@
 package com.kpi.miss;
 
+import com.kpi.miss.repository.MissKpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class MissKpiService {
 
     @Autowired
-    private MissKpiRepository repository;
+    private MissKpiRepository missKpiRepository;
 
 
 }
