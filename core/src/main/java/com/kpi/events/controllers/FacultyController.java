@@ -1,5 +1,5 @@
 package com.kpi.events.controllers;
-/*
+
 import com.kpi.events.model.Faculty;
 import com.kpi.events.services.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,4 +19,4 @@ public class FacultyController {
         return service.findByStudentId(studentId);
     }
 }
-*/
+

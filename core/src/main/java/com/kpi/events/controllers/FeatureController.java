@@ -1,6 +1,5 @@
 package com.kpi.events.controllers;
 
-import com.kpi.events.model.FeaturesStatusDto;
 import com.kpi.events.services.FeaturesStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

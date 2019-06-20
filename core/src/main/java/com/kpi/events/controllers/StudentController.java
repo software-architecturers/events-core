@@ -1,5 +1,4 @@
 package com.kpi.events.controllers;
-/*
 import com.kpi.events.model.Student;
 import com.kpi.events.model.StudentIn;
 import com.kpi.events.model.dto.StudentDto;
@@ -29,4 +28,3 @@ public class StudentController {
         return service.loginStudent(student);
     }
 }
-*/

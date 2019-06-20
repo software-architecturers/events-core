@@ -1,5 +1,5 @@
 package com.kpi.events.services;
-/*
+
 import com.kpi.events.model.Hostel;
 import com.kpi.events.model.Student;
 import com.kpi.events.model.repository.StudentRepository;
@@ -52,4 +52,4 @@ public class HostelService implements IService {
 
     }
 }
-*/
+
