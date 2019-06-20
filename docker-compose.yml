@@ -1,0 +1,36 @@
+version: '3.7'
+
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=kpi_events
+    volumes:
+      - events-core-db:/var/lib/mysql
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8
+    restart: always
+
+  events-core:
+    image: events-core:latest
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/kpi_events?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - FILE_UPLOAD-DIR='/images'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '1m'
+        max-file: '1'
+    ports:
+      - '8080:8080'
+    restart: always
+    depends_on:
+      - db
+      
+volumes:
+  events-core-db:
+    driver: local
