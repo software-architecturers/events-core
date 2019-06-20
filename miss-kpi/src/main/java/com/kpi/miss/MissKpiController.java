@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api")
-@ConditionalOnProperty(name = "features.events")
+@ConditionalOnProperty(name = "features.events.miss")
 public class MissKpiController {
 
     @Autowired

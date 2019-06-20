@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@ConditionalOnProperty(name = "features.events")
+@ConditionalOnProperty(name = "features.events.common")
 public class EventController {
 
     @Autowired
