@@ -1,20 +1,16 @@
 buildscript {
-    ext { springBootVersion = '2.1.4.RELEASE' }
     repositories { mavenCentral() }
-    dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") }
 }
 
 plugins {
-    id "io.spring.dependency-management" version "1.0.5.RELEASE"
+    id "org.springframework.boot" version "2.1.6.RELEASE"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id 'java'
+    id 'idea'
+    id 'eclipse'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-
 bootJar {
-    baseName = 'events-core-core'
     version = '0.0.1-SNAPSHOT'
 }
 
@@ -26,36 +22,26 @@ repositories {
     mavenCentral()
 }
 dependencies {
+    implementation project(':miss-kpi')
+
 	compileOnly 'org.projectlombok:lombok:1.18.8'
 	annotationProcessor 'org.projectlombok:lombok:1.18.8'
-    implementation('org.springframework.boot:spring-boot-starter-web')
 
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    compile project(':miss-kpi')
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile('mysql:mysql-connector-java:8.0.13')
-    compile('com.auth0:jwks-rsa:0.8.0')
-    compile('org.springframework.security:spring-security-jwt:1.0.9.RELEASE')
-    compile('org.springframework.security:spring-security-core:5.1.5.RELEASE')
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.1.5.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-oauth2-client'
-    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.4.RELEASE'
-    compile('io.jsonwebtoken:jjwt:0.6.0')
-    compile 'org.modelmapper:modelmapper:2.3.3'
-    compile 'org.springframework.boot:spring-boot-configuration-processor:2.0.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
 
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    
-    //java 11 compat
-    implementation "javax.xml.bind:jaxb-api:2.3.1"
-    implementation "com.sun.xml.bind:jaxb-core:2.3.0"
-    implementation "com.sun.xml.bind:jaxb-impl:2.3.2"
-    implementation "javax.activation:activation:1.1.1"
+    implementation 'mysql:mysql-connector-java:8.0.+'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.auth0:jwks-rsa:0.8.2'
 
-    implementation 'org.javassist:javassist:3.25.0-GA'
+    implementation 'org.springframework.security:spring-security-oauth2-client:5.1.+'
+    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.3.+'
+
+    implementation 'org.modelmapper:modelmapper:2.3.+'
+
+
+
 }
