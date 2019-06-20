@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.kpi.events.security.models.TokenResponse;
 import com.kpi.events.model.User;
 import com.kpi.events.model.UserIn;
 import com.kpi.events.security.filters.JwtTokenUtil;
@@ -24,11 +23,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RestController
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/auth/signup", method = RequestMethod.POST, produces = "application/json")
     public String signup(@RequestBody User user) {
@@ -48,22 +47,16 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST, produces = "application/json")
-    public TokenResponse login(@RequestBody User user) {
+    public Token login(@RequestBody User user) {
         System.out.println("login ");
-        String token = userService.login(user);
-        return new TokenResponse(token);
+        return new Token(userService.login(user));
     }
 
     @RequestMapping(value = "/auth/token", method = RequestMethod.POST, produces = "application/json")
-    public TokenResponse refreshToken(@RequestBody Token tokenIn) {
+    public Token refreshToken(@RequestBody Token tokenIn) {
         System.out.println("refresh ");
-
-        String token = userService.refresh(tokenIn);
-
-        return new TokenResponse(token);
+        return new Token(userService.refresh(tokenIn));
     }
-
-
 
     @GetMapping("/auth/suc")
     public String successful() {
