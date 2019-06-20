@@ -3,6 +3,11 @@ package com.kpi.events.security.filters;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.kpi.events.security.models.ExpiredException;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +22,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 
-        response.getWriter().write("Error");
+        response.sendError(403, "Not authorized");
     }
+    
 }

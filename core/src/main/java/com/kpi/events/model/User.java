@@ -2,23 +2,33 @@ package com.kpi.events.model;
 
 import com.kpi.events.enums.UserRole;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @Entity
+@Data
 public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column
     private long id;
+    
+    String refreshId;
 
     private String userIdGoogle;
 
@@ -71,6 +81,17 @@ public class User implements UserDetails {
     public User(Map<String, String> authInfo) {
         this.userIdGoogle = authInfo.get("sub");
         this.login = authInfo.get("email");
+    }
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> priveleges = new ArrayList<>();
+    
+    public List<String> getPriveleges() {
+    	return priveleges;
+    }
+    
+    public void setPriveleges(List<String> priveleges) {
+    	this.priveleges = priveleges;
     }
 
     public long getId() {
@@ -128,11 +149,14 @@ public class User implements UserDetails {
     public String getUserId() {
         return userIdGoogle;
     }
+    
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.priveleges.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
+
 
     @Override
     public String getUsername() {
@@ -196,4 +220,7 @@ public class User implements UserDetails {
                 ", secondName='" + secondName + '\'' +
                 '}';
     }
+   
+    
+    
 }

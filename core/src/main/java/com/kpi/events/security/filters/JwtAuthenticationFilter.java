@@ -10,6 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.kpi.events.model.User;
+import com.kpi.events.model.repository.UserRepository;
+import com.kpi.events.security.models.ExpiredException;
+import com.kpi.events.security.models.TokenAuthentication;
+import com.kpi.events.services.UserService;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,49 +28,48 @@ import java.util.Arrays;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserRepository repository;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-
-    public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String token = resolveToken(req);
+        String token = jwtTokenUtil.resolveToken(req);
+        boolean isCont = true;
         String username = null;
+        long id = 0;
         if (token != null) {
             try {
-                username = jwtTokenUtil.getUsernameFromToken(token);
+                //username = jwtTokenUtil.getUsernameFromToken(token);
+                id = jwtTokenUtil.getIdFromToken(token);
             } catch (IllegalArgumentException e) {
                 logger.error("an error occured during getting username from token", e);
             } catch (ExpiredJwtException e) {
                 logger.warn("the token is expired and not valid anymore", e);
+                res.setStatus(401);
+                res.getWriter().write("{\"status\": \"expired\"}");
+                isCont = false;
             } catch(SignatureException e){
                 logger.error("Authentication Failed. Username or Password not valid.");
             }
         } else {
             logger.warn("couldn't find bearer string, will ignore the header");
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (id != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            User user = repository.findById(id);
 
-            if (jwtTokenUtil.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            if (jwtTokenUtil.validateToken(token, user)) {
+                TokenAuthentication authentication = new TokenAuthentication(token ,user.getAuthorities(), true, user);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 logger.info("authenticated user " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                
             }
         }
-
-        chain.doFilter(req, res);
+        if(isCont) {
+        	chain.doFilter(req, res);
+        }
     }
 }

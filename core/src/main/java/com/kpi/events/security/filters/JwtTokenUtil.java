@@ -13,16 +13,26 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 
 @Component
 public class JwtTokenUtil implements Serializable {
+	
+	
 
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public long getIdFromToken(String token) {
+        return Long.parseLong(getClaimFromToken(token, Claims::getSubject));
     }
 
+    public String getRefreshIdFromToken(String token) {
+    	 final Claims claims = getAllClaimsFromToken(token);
+    	 return (String) claims.get("refreshId");
+    }
+    
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -45,14 +55,16 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(User user) {
-        return doGenerateToken(user.getLogin());
+        return doGenerateToken(user);
     }
 
-    private String doGenerateToken(String subject) {
+    private String doGenerateToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(subject);
-        claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-
+        Claims claims = Jwts.claims().setSubject(Long.toString(user.getId()));//TODO: getId
+        claims.put("scopes", user.getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()));
+        claims.put("refreshId", user.getRefreshId());
+        claims.put("name", user.getLogin());
+        
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("https://devglan.com")
@@ -62,11 +74,17 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (
-                username.equals(userDetails.getUsername())
-                        && !isTokenExpired(token));
+    public Boolean validateToken(String token, User userDetails) {
+        final long id = getIdFromToken(token);
+        return id == userDetails.getId() && !isTokenExpired(token);
+    }
+    
+    public String resolveToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
 }

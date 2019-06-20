@@ -26,6 +26,13 @@ repositories {
     mavenCentral()
 }
 dependencies {
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    implementation('org.springframework.boot:spring-boot-starter-web')
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     compile project(':miss-kpi')
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile('mysql:mysql-connector-java:8.0.13')

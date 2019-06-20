@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,23 +39,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+    
+
 
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Autowired
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(encoder());
     }
 
     @Bean
@@ -64,10 +56,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
-//                antMatchers("/auth/**", "/webjars/**", "/**").permitAll()
-//                .anyRequest().authenticated()
-/*        anyRequest().permitAll()
+    //    http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
+    	http.csrf().disable().anonymous().and().authorizeRequests().antMatchers("/auth/*")
+    			.anonymous().antMatchers(HttpMethod.GET).anonymous()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
@@ -87,7 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-*/
+
     }
 
     @Bean

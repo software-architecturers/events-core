@@ -1,5 +1,5 @@
 package com.kpi.events.services;
-
+/*
 import com.kpi.events.model.Faculty;
 import com.kpi.events.model.Student;
 import com.kpi.events.model.repository.StudentRepository;
@@ -49,4 +49,6 @@ public class FacultyService implements IService<Faculty> {
 
         return student.getFaculty();
     }
+    
 }
+*/

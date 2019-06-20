@@ -1,5 +1,5 @@
 package com.kpi.events.controllers;
-
+/*
 import com.kpi.events.model.Hostel;
 import com.kpi.events.services.HostelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,3 +20,4 @@ public class HostelController {
     }
 
 }
+*/
