@@ -3,7 +3,7 @@ version: '3.7'
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=kpi_events
@@ -18,8 +18,17 @@ services:
       context: '.'
       dockerfile: 'Dockerfile'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/kpi_events?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      - FILE_UPLOAD-DIR='/images'
+      - >
+        SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/kpi_events?
+        useUnicode=true&
+        useJDBCCompliantTimezoneShift=true&
+        useLegacyDatetimeCode=false&
+        serverTimezone=UTC&
+        useSSL=false&
+        allowPublicKeyRetrieval=true
+      - FILE_UPLOAD-DIR=/images
+    volumes:
+      - images:/images
     logging:
       driver: "json-file"
       options:
@@ -30,7 +39,9 @@ services:
     restart: always
     depends_on:
       - db
-      
+
 volumes:
   events-core-db:
+    driver: local
+  images:
     driver: local
