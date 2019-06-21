@@ -1,4 +1,4 @@
-package com.kpi.miss;
+package com.kpi.miss.model;
 
 import lombok.Data;
 

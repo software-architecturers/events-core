@@ -1,7 +1,7 @@
 package com.kpi.events;
 
 import com.kpi.events.model.files.FileStorageProperties;
-import com.kpi.miss.repository.MissKpiRepository;
+import com.kpi.miss.model.repository.MissKpiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication(scanBasePackages = {"com.kpi.events", "com.kpi.miss"})
 @EnableJpaRepositories(
-        basePackages = {"com.kpi.events.model.repository", "com.kpi.miss.repository"},
+        basePackages = {"com.kpi.events.model.repository", "com.kpi.miss.model.repository"},
         basePackageClasses = MissKpiRepository.class)
 @EntityScan(basePackages = {"com.kpi.miss", "com.kpi.events"})
 @EnableConfigurationProperties({

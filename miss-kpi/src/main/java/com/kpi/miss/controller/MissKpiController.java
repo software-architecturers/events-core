@@ -1,5 +1,7 @@
-package com.kpi.miss;
+package com.kpi.miss.controller;
 
+import com.kpi.miss.model.MissKpiEntity;
+import com.kpi.miss.service.MissKpiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;

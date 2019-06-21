@@ -1,6 +1,6 @@
 package com.kpi.events.services;
 
-import com.kpi.events.model.FeaturesStatusDto;
+import com.kpi.events.model.dto.FeaturesStatusDto;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
