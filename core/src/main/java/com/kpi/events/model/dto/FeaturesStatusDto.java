@@ -22,37 +22,5 @@ public class FeaturesStatusDto {
     public FeaturesStatusDto() {
 
     }
-
-    public String getEventStatus() {
-        return eventStatus;
-    }
-
-    public void setEventStatus(String eventStatus) {
-        this.eventStatus = eventStatus;
-    }
-
-    public String getEventMissKpiStatus() {
-        return eventMissKpiStatus;
-    }
-
-    public void setEventMissKpiStatus(String eventMissKpiStatus) {
-        this.eventMissKpiStatus = eventMissKpiStatus;
-    }
-
-    public String getStudentStatus() {
-        return studentStatus;
-    }
-
-    public void setStudentStatus(String studentStatus) {
-        this.studentStatus = studentStatus;
-    }
-
-    public String getUniversityStatus() {
-        return universityStatus;
-    }
-
-    public void setUniversityStatus(String universityStatus) {
-        this.universityStatus = universityStatus;
-    }
 }
 
