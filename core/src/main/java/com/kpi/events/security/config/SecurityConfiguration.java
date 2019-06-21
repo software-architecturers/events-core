@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
-    
+
 
 
     @Override
@@ -57,6 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     //    http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
+        http.cors();
     	http.csrf().disable().anonymous().and().authorizeRequests().antMatchers("/auth/*")
     			.anonymous().antMatchers(HttpMethod.GET).anonymous()
                 .anyRequest().authenticated()
