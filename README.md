@@ -1,4 +1,38 @@
 # events-core
 Spring based REST API for KPI Events application
 
-##Endpoints 
+## Resoures
+
+### Event 
+
+
+### User
+
+
+### Image 
+
+
+### Student
+
+
+### Miss KPI
+
+
+### University
+
+
+### Faculty
+
+
+
+### Hostel
+
+
+
+
+
+
+
+
+
+
