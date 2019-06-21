@@ -1,9 +1,13 @@
 package com.kpi.events.security.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Token {
 	
-	private final String token;
+	private  String token;
 }
