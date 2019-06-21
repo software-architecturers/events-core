@@ -4,6 +4,7 @@ import com.kpi.miss.model.MissKpiEntity;
 import com.kpi.miss.model.repository.MissKpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,5 +55,12 @@ public class MissKpiService implements IService<MissKpiEntity> {
     @Override
     public MissKpiEntity update(long id, MissKpiEntity entity) {
         return null;
+    }
+
+    public List<MissKpiEntity> findAllSorted(int limit, int page) {
+        return missKpiRepository
+                .findAll(PageRequest
+                        .of(page, limit, Sort.by(Sort.Direction.DESC, "likes")))
+                .getContent();
     }
 }

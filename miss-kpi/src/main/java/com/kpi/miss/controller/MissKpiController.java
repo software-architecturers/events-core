@@ -21,6 +21,11 @@ public class MissKpiController {
                                                @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
     }
+    @GetMapping("/participants/sorted")
+    public List<MissKpiEntity> getParticipantsSorted(@RequestParam(required = false, defaultValue = "10") int limit,
+                                               @RequestParam(required = false, defaultValue = "0") int page) {
+        return service.findAllSorted(limit, page);
+    }
 
 
     @PostMapping("/participants/like/{id}")
