@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/api")
 @ConditionalOnProperty(name = "features.events.common")
 public class EventController {
 
@@ -21,28 +22,28 @@ public class EventController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping("/api/events/add")
+    @PostMapping("/events/add")
     public Event createNewEvent(@RequestBody Event event) {
         return service.save(event);
     }
 
-    @GetMapping("/api/events")
+    @GetMapping("/events")
     public List<Event> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
                                  @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
     }
 
-    @GetMapping(path = "/api/events/{id}")
+    @GetMapping(path = "/events/{id}")
     public EventDto getEvent(@PathVariable("id") long eventId) {
         return convertToDto(service.find(eventId));
     }
 
-    @PutMapping(path = "/api/events/update/{id}")
+    @PutMapping(path = "/events/update/{id}")
     public Event updateEvent(@PathVariable("id") long eventId, @RequestBody Event newEvent) {
         return service.update(eventId, newEvent);
     }
 
-    @GetMapping(path = "/api/events/find/{search}")
+    @GetMapping(path = "/events/find/{search}")
     public List<Event> searchEvents(@PathVariable("search") String search) {
         return service.searchEventLIKEGOOGLE(search);
     }

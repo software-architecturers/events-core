@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-//@Data
+@Data
 @Component
 public class FeaturesStatusDto {
     @Value("${features.events.common}")

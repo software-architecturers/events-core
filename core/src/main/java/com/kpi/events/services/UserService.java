@@ -118,7 +118,7 @@ public class UserService implements IService<User> {
     	userdb.setFirstName(user.getFirstName());
     	userdb.setLogin(user.getLogin());
     	userdb.setPassword(encode(user.getPassword()));
-    	userdb.setPriveleges(new ArrayList<String>(Arrays.asList("READ_EVENTS", "WRITE_EVENTS")));
+    	userdb.setPriveleges(Arrays.asList("READ_EVENTS", "WRITE_EVENTS"));
     	userdb.setSecondName(user.getSecondName());
     	save(userdb);
 
@@ -151,7 +151,7 @@ public class UserService implements IService<User> {
         repository.save(user);
         if(!jwtTokenUtil.validateToken(token, user))
         	return "";
-        if(user==null) {
+        if(user == null) {
         	return "";
         }
 		return jwtTokenUtil.generateToken(user);
