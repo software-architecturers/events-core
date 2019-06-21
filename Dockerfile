@@ -18,6 +18,6 @@ FROM openjdk:11
 
 ENV APP /app
 WORKDIR $APP
-COPY --from=build "${APP}/core/build/libs/events-core-core-0.0.1-SNAPSHOT.jar" ./
+COPY --from=build "${APP}/core/build/libs/core-0.0.1-SNAPSHOT.jar" ./
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/events-core-core-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/core-0.0.1-SNAPSHOT.jar"]
