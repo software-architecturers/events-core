@@ -42,7 +42,7 @@ public class MissKpiService implements IService<MissKpiEntity> {
 
     public MissKpiEntity unlikeParticipant(long id) {
         MissKpiEntity missKpiEntity = missKpiRepository.findById(id).orElseThrow(runtimeExceptionSupplier);
-        missKpiEntity.setLikes(missKpiEntity.getLikes() + 1);
+        missKpiEntity.setLikes(missKpiEntity.getLikes() - 1);
         return missKpiRepository.save(missKpiEntity);
     }
 
