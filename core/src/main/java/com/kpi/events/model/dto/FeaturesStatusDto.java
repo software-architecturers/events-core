@@ -1,4 +1,4 @@
-package com.kpi.events.model;
+package com.kpi.events.model.dto;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

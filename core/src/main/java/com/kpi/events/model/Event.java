@@ -1,8 +1,11 @@
 package com.kpi.events.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Collection;
 
+@Data
 @Entity
 public class Event {
 
@@ -14,7 +17,7 @@ public class Event {
 
     private String description;
 
-    @OneToMany(cascade= CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<Image> images;
 
 
@@ -25,38 +28,6 @@ public class Event {
         this.id = id;
         this.title = title;
         this.images = images;
-        this.description = description;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Collection<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Collection<Image> images) {
-        this.images = images;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
     }
 }
