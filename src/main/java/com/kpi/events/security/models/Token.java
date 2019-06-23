@@ -2,14 +2,15 @@ package com.kpi.events.security.models;
 
 public class Token {
 	
-	String token;
 	
-	public String getToken() {
-		return token;
+	
+	String accessToken;
+	
+	public String getAccessToken() {
+		return accessToken;
 	}
 	
-	public void setToken(String token) {
-		this.token = token;
+	public void setAccessToken(String s) {
+		accessToken = s;
 	}
-
 }

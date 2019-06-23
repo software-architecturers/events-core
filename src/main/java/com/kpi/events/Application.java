@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 })
 public class Application {
 
-    @Bean
+    @Bean      
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }

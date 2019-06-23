@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.kpi.events.security.models.TokenResponse;
+import com.kpi.events.model.RefreshToken;
 import com.kpi.events.model.User;
 import com.kpi.events.model.UserIn;
 import com.kpi.events.security.filters.JwtTokenUtil;
@@ -50,17 +51,17 @@ public class AuthController {
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST, produces = "application/json")
     public TokenResponse login(@RequestBody User user) {
         System.out.println("login ");
-        String token = userService.login(user);
-        return new TokenResponse(token);
+        TokenResponse token = userService.login(user);
+        return token;
     }
     
     @RequestMapping(value = "/auth/token", method = RequestMethod.POST, produces = "application/json")
-    public TokenResponse refreshToken(@RequestBody Token tokenIn) {
+    public TokenResponse refreshToken(@RequestBody RefreshToken tokenIn) {
         System.out.println("refresh ");
         
-        String token = userService.refresh(tokenIn);
+        TokenResponse token = userService.refresh(tokenIn);
         
-        return new TokenResponse(token);
+        return token;
     }
 	
 

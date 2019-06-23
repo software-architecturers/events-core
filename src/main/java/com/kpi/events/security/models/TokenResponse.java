@@ -3,19 +3,29 @@ package com.kpi.events.security.models;
 
 public class TokenResponse {
 	
-	String token;
+	String accessToken;
+	String refreshToken;
 	
-	public TokenResponse(String s){
-		token = s;
-		
+	public TokenResponse(String s, String r){
+		accessToken = s;
+		refreshToken = r;
 	}
 	
-	public String getToken() {
-		return token;
+	public String getAccessToken() {
+		return accessToken;
 	}
 	
-	public void setToken(String s) {
-		token = s;
+	public void setAccessToken(String s) {
+		accessToken = s;
 	}
+	
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+	
+	public void setRefreshToken(String s) {
+		refreshToken = s;
+	}
+
 
 }
