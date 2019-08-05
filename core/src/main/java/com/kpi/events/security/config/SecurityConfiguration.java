@@ -56,30 +56,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    //    http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
+        http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
         http.cors();
-    	http.csrf().disable().anonymous().and().authorizeRequests().antMatchers("/auth/*")
-    			.anonymous().antMatchers(HttpMethod.GET).anonymous()
-                .anyRequest().authenticated()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-                .and()
-                .oauth2Login()
-                .loginPage("/auth/custom-login")
-                .redirectionEndpoint()
-                .baseUri("/google-login")
-                .and()
-                .userInfoEndpoint()
-                .oidcUserService(oidcUserService)
-                .and()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(customAuthorizationRequestRepository())
-                .and()
-                .successHandler(customAuthenticationSuccessHandler);
-
-        http
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//    	http.csrf().disable().anonymous().and().authorizeRequests().antMatchers("/auth/*")
+//    			.anonymous().antMatchers(HttpMethod.GET).anonymous()
+//                .anyRequest().authenticated()
+//                .and()
+//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+//                .and()
+//                .oauth2Login()
+//                .loginPage("/auth/custom-login")
+//                .redirectionEndpoint()
+//                .baseUri("/google-login")
+//                .and()
+//                .userInfoEndpoint()
+//                .oidcUserService(oidcUserService)
+//                .and()
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorize")
+//                .authorizationRequestRepository(customAuthorizationRequestRepository())
+//                .and()
+//                .successHandler(customAuthenticationSuccessHandler);
+//
+//        http
+//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
     }
 
