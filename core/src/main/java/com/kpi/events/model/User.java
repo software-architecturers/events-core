@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 
 @Entity
+@Table(name = "users_table")
 @Data
 public class User implements UserDetails {
 

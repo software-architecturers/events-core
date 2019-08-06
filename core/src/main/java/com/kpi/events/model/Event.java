@@ -7,6 +7,7 @@ import java.util.Collection;
 
 @Data
 @Entity
+@Table(name = "events_table")
 public class Event {
 
     @Id
