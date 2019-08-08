@@ -14,8 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication(scanBasePackages = {"com.kpi.events", "com.kpi.miss"})
 @EnableJpaRepositories(
-        basePackages = {"com.kpi.events.model.repository", "com.kpi.miss.model.repository"},
-        basePackageClasses = MissKpiRepository.class)
+        basePackages = {"com.kpi.events.model.repository", "com.kpi.miss.model.repository"})
 @EntityScan(basePackages = {"com.kpi.miss", "com.kpi.events"})
 @EnableConfigurationProperties({
         FileStorageProperties.class

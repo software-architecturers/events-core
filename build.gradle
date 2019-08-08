@@ -1,0 +1,40 @@
+buildscript {
+    repositories { mavenCentral() }
+}
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+}
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
+sourceCompatibility = 1.8
+group = 'com.kpi.events'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile project(':miss-kpi')
+    compile project(':core')
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'mysql:mysql-connector-java:8.0.+'
+    implementation 'org.postgresql:postgresql'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.auth0:jwks-rsa:0.8.2'
+    implementation 'org.springframework.security:spring-security-oauth2-client:5.1.+'
+    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.3.+'
+    implementation 'org.modelmapper:modelmapper:2.3.+'
+}
