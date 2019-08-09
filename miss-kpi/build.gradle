@@ -1,28 +1,4 @@
-buildscript {
-    repositories { mavenCentral() }
-}
 
-plugins {
-//    id "io.spring.dependency-management" version "1.0.8.RELEASE"
-    id 'java'
-    id 'idea'
-    id 'eclipse'
-}
-
-//ext { springBootVersion = '2.1.6.RELEASE' }
-
-//jar {
-//    version = '0.0.1-SNAPSHOT'
-//}
-
-
-repositories {
-    mavenCentral()
-}
-
-group = 'com.kpi.events'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
@@ -35,8 +11,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.modelmapper:modelmapper:2.3.+'
 }
-//dependencyManagement {
-//    imports {
-//        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-//    }
-//}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.1.6.RELEASE"
+    }
+}

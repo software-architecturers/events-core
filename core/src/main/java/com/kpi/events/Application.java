@@ -1,7 +1,6 @@
 package com.kpi.events;
 
 import com.kpi.events.model.files.FileStorageProperties;
-import com.kpi.miss.model.repository.MissKpiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
