@@ -3,17 +3,17 @@ buildscript {
 }
 
 plugins {
-    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+//    id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id 'java'
     id 'idea'
     id 'eclipse'
 }
 
-ext { springBootVersion = '2.1.6.RELEASE' }
+//ext { springBootVersion = '2.1.6.RELEASE' }
 
-jar {
-    version = '0.0.1-SNAPSHOT'
-}
+//jar {
+//    version = '0.0.1-SNAPSHOT'
+//}
 
 
 repositories {
@@ -35,8 +35,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.modelmapper:modelmapper:2.3.+'
 }
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-    }
-}
+//dependencyManagement {
+//    imports {
+//        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+//    }
+//}

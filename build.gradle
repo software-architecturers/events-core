@@ -3,12 +3,14 @@ buildscript {
 }
 
 plugins {
+    id 'io.spring.dependency-management' version "1.0.8.RELEASE"
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
     id 'java'
     id 'idea'
     id 'eclipse'
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['build', 'clean', 'bootRun'])
 build.mustRunAfter clean
 
 sourceCompatibility = 1.8
@@ -19,8 +21,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile project(':miss-kpi')
     compile project(':core')
+    compile project(':miss-kpi')
 
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
