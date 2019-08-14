@@ -1,4 +1,3 @@
 rootProject.name = 'events-core'
-include 'miss-kpi'
 include 'core'
 

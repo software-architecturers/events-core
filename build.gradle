@@ -30,7 +30,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(':miss-kpi')
     implementation project(':core')
 
     compileOnly 'org.projectlombok:lombok:1.18.8'
