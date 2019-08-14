@@ -11,9 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication(scanBasePackages = {"com.kpi.events", "com.kpi.miss"})
+@SpringBootApplication(scanBasePackages = {"com.kpi.events"})
 @EnableJpaRepositories(
-        basePackages = {"com.kpi.events.model.repository", "com.kpi.miss.model.repository"})
+        basePackages = {"com.kpi.events.model.repository"})
 @EntityScan(basePackages = {"com.kpi.miss", "com.kpi.events"})
 @EnableConfigurationProperties({
         FileStorageProperties.class
