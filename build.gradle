@@ -1,10 +1,10 @@
 plugins {
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
     id 'io.spring.dependency-management' version "1.0.8.RELEASE"
     id 'java'
     id 'idea'
     id 'eclipse'
 }
-
 allprojects {
 
     sourceCompatibility = 1.8
@@ -21,19 +21,21 @@ allprojects {
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
 
-sourceCompatibility = 1.8
-group = 'com.kpi.events'
-version = '0.0.1-SNAPSHOT'
+
+springBoot {
+    mainClassName = "com.kpi.events.Application"
+}
+bootJar {
+    enabled = true
+    mainClassName = "com.kpi.events.Application"
+}
 
 repositories {
     mavenCentral()
 }
-
 dependencies {
-    implementation project(':core')
-
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
