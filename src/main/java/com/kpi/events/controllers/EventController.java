@@ -38,24 +38,9 @@ public class EventController {
         return service.findAll(limit, page);
     }
 
-    @GetMapping("/event1")
-    public Event getEvent1(@RequestParam(required = false, defaultValue = "10") int limit,
-                                 @RequestParam(required = false, defaultValue = "0") int page) {
-        Event build = Event.builder()
-//                .creator(new User())
-                .id(1)
-                .creationDate(LocalDateTime.now())
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
-                .location(new LocationDto())
-                .images(new HashSet<>())
-                .build();
-        return service.save(build);
-    }
-
     @GetMapping(path = "/events/{id}")
-    public EventDto getEvent(@PathVariable("id") long eventId) {
-        return convertToDto(service.find(eventId));
+    public Event getEvent(@PathVariable("id") long eventId) {
+        return service.find(eventId);
     }
 
     @PutMapping(path = "/events/update/{id}")
