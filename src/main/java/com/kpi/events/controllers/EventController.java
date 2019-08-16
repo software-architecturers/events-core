@@ -1,13 +1,18 @@
 package com.kpi.events.controllers;
 
 import com.kpi.events.model.Event;
+import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
+import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.services.EventService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -31,6 +36,21 @@ public class EventController {
     public List<Event> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
                                  @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
+    }
+
+    @GetMapping("/event1")
+    public Event getEvent1(@RequestParam(required = false, defaultValue = "10") int limit,
+                                 @RequestParam(required = false, defaultValue = "0") int page) {
+        Event build = Event.builder()
+//                .creator(new User())
+                .id(1)
+                .creationDate(LocalDateTime.now())
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now())
+                .location(new LocationDto())
+                .images(new HashSet<>())
+                .build();
+        return service.save(build);
     }
 
     @GetMapping(path = "/events/{id}")
