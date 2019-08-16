@@ -14,5 +14,13 @@ public class LocationDto {
 
     private String destination;
 
+    public LocationDto(BigDecimal latitude, BigDecimal longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public LocationDto(){
+
+    }
 
 }

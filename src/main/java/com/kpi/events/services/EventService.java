@@ -3,6 +3,7 @@ package com.kpi.events.services;
 import com.kpi.events.config.HibernateUtil;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
+import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.model.repository.EventRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +76,10 @@ public class EventService implements IService<Event> {
         return null;
     }
 
+    public List<Event> findEventsByLocation(LocationDto leftBotPoint, LocationDto rightTopPoint) {
+        return eventRepository
+                .findAllByLocation(
+                        leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
+                        leftBotPoint.getLongitude(), rightTopPoint.getLongitude());
+    }
 }
