@@ -1,32 +1,28 @@
 package com.kpi.events.security.filters;
 
+import com.kpi.events.exceptions.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kpi.events.model.User;
 import com.kpi.events.model.repository.UserRepository;
-import com.kpi.events.security.models.ExpiredException;
 import com.kpi.events.security.models.TokenAuthentication;
-import com.kpi.events.services.UserService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    public static final String USERNAME_FROM_TOKEN = "an error occured during getting username from token";
+    public static final String EXPIRED_TOKEN = "the token is expired and not valid anymore";
     @Autowired
     private UserRepository repository;
 
@@ -41,12 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         long id = 0;
         if (token != null) {
             try {
-                //username = jwtTokenUtil.getUsernameFromToken(token);
                 id = jwtTokenUtil.getIdFromToken(token);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
+                logger.error(USERNAME_FROM_TOKEN, e);
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                logger.warn(EXPIRED_TOKEN, e);
                 res.setStatus(401);
                 res.getWriter().write("{\"status\": \"expired\"}");
                 isCont = false;
@@ -58,7 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (id != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            User user = repository.findById(id);
+            User user = repository.findById(id)
+                    .orElseThrow(UserNotFoundException::new);
 
             if (jwtTokenUtil.validateToken(token, user)) {
                 TokenAuthentication authentication = new TokenAuthentication(token ,user.getAuthorities(), true, user);

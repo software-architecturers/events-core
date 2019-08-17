@@ -1,20 +1,16 @@
 package com.kpi.events.services;
 
-import static com.kpi.events.utils.Constants.WRONG_LOGIN;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
+import com.kpi.events.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
-import com.kpi.events.model.UserIn;
 import com.kpi.events.model.repository.UserRepository;
 import com.kpi.events.security.filters.JwtTokenUtil;
 import com.kpi.events.security.models.RegisterDTO;
@@ -34,8 +30,8 @@ public class UserService implements IService<User> {
 
 	@Override
 	public List<User> findAll(int size, int page) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return repository.findAll(new PageRequest(page, size)).getContent();
 	}
 
 	@Override
@@ -49,14 +45,12 @@ public class UserService implements IService<User> {
 
 	@Override
 	public User find(long id) {
-		// TODO Auto-generated method stub
-
-		return null;
+		return repository.findById(id)
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 	@Override
 	public User update(long id, User entity) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -79,19 +73,19 @@ public class UserService implements IService<User> {
     private UserRepository userRepository;
 
     
-    public String signUp(User user) {
-        User dbUser = userRepository.findByLogin(user.getLogin());
-        if (dbUser != null) {
-            throw new RuntimeException("User already exist.");
-        }
-        User userToCreate = new User();
-        userToCreate.setLogin(user.getLogin());
-        
-        userToCreate.setPassword(encode(user.getPassword()));
-        
-        save(userToCreate);
-        return jwtTokenUtil.generateToken(userToCreate);
-    }
+//    public String signUp(User user) {
+//        User dbUser = userRepository.findByLogin(user.getLogin());
+//        if (dbUser != null) {
+//            throw new RuntimeException("User already exist.");
+//        }
+//        User userToCreate = new User();
+//        userToCreate.setLogin(user.getLogin());
+//
+//        userToCreate.setPassword(encode(user.getPassword()));
+//
+//        save(userToCreate);
+//        return jwtTokenUtil.generateToken(userToCreate);
+//    }
 
 
     public String login(User user) {
@@ -107,23 +101,22 @@ public class UserService implements IService<User> {
         return jwtTokenUtil.generateToken(dbUser);
     }
 
-    public void register(RegisterDTO user){
-    	if(!user.getConfirmPassword().equals(user.getPassword())) {
-    		throw new RuntimeException("Password is incorrect");
-    	}
+    public void register(RegisterDTO user) {
+		if (!user.getConfirmPassword().equals(user.getPassword())) {
+			throw new RuntimeException("Password is incorrect");
+		}
 
-    	System.out.println(user);
-    	User userdb = new User();
-    	userdb.setEmail(user.getEmail());
-    	userdb.setFirstName(user.getFirstName());
-    	userdb.setLogin(user.getLogin());
-    	userdb.setPassword(encode(user.getPassword()));
-    	userdb.setPriveleges(Arrays.asList("READ_EVENTS", "WRITE_EVENTS"));
-    	userdb.setSecondName(user.getSecondName());
-    	save(userdb);
+		User userEntity = User.builder()
+				.email(user.getEmail())
+				.firstName(user.getFirstName())
+				.secondName(user.getSecondName())
+				.login(user.getLogin())
+				.password(encode(user.getPassword()))
+				.priveleges(Arrays.asList("READ_EVENTS", "WRITE_EVENTS"))
+				.build();
 
-
-    }
+		save(userEntity);
+	}
 
 	public String refresh(Token tokenIn) {
 
@@ -132,7 +125,6 @@ public class UserService implements IService<User> {
 		String refreshId = "";
         if (token != null) {
             try {
-                //username = jwtTokenUtil.getUsernameFromToken(token);
                 refreshId = jwtTokenUtil.getRefreshIdFromToken(token);
             } catch (IllegalArgumentException e) {
                 System.out.println("an error occured during getting username from token" + e);

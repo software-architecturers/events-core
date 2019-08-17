@@ -2,6 +2,8 @@ package com.kpi.events.model;
 
 import com.kpi.events.enums.UserRole;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users_table")
 @Data
+@Builder
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +87,7 @@ public class User implements UserDetails {
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
     private List<String> priveleges = new ArrayList<>();
 
     public String getPassword() {
