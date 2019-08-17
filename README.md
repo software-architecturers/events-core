@@ -5,27 +5,13 @@ Spring based REST API for KPI Events application
 
 ### Event 
 
-
 ### User
-
 
 ### Image 
 
-
-### Student
-
-
-### Miss KPI
-
-
-### University
-
-
-### Faculty
-
-
-
-### Hostel
+#
+*Full documentation can be found here:* 
+`https://documenter.getpostman.com/view/8009962/SVfGyrLG?version=latest`
 
 
 
