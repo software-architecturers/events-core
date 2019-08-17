@@ -45,6 +45,10 @@ public class Event {
     private String description;
 
     @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "longitude", column = @Column(scale = 14, precision = 18)),
+            @AttributeOverride(name = "latitude", column = @Column(scale = 14, precision = 18))
+    })
     private LocationDto location;
 
     @OneToMany(cascade= {ALL}, fetch=FetchType.EAGER)

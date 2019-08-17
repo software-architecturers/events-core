@@ -6,6 +6,8 @@ import com.kpi.events.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,7 +18,12 @@ public class LocationController {
     private EventService eventService;
 
     @GetMapping("/events")
-    public List<Event> getEventsOnMap(@RequestParam LocationDto leftBotPoint, @RequestParam LocationDto rightTopPoint) {
-        return eventService.findEventsByLocation(leftBotPoint, rightTopPoint);
+    public List<Event> getEventsOnMap(BigDecimal leftBotLatitude, BigDecimal leftBotLongtitude,
+                                      BigDecimal rightTopLatitude, BigDecimal rightTopLongtitude) {
+
+        return eventService
+                .findEventsByLocation(
+                        new LocationDto(leftBotLatitude, leftBotLongtitude),
+                        new LocationDto(rightTopLatitude, rightTopLongtitude));
     }
 }
