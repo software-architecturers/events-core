@@ -17,24 +17,29 @@ public class FeaturesStatusService {
     public Object getAllFeaturesStatus() {
         JSONObject responseObject = new JSONObject();
         List<JSONObject> eventsStatusList = new ArrayList<>();
-        JSONObject eventsStatus = new JSONObject();
-        eventsStatus.put("features.events.Main", featuresStatusDto.getEventStatus());
-        eventsStatus.put("isActive", featuresStatusDto.getEventStatus());
-        eventsStatus.put("request", "http://goggle.com");
-        eventsStatus.put("titleName", "Все ивенты");
-        eventsStatus.put("logoImageURL", "http://..");
-        eventsStatusList.add(eventsStatus);
 
-        JSONObject eventsMissKpiStatus = new JSONObject();
-        eventsMissKpiStatus.put("features.events.Miss_Kpi", featuresStatusDto.getEventMissKpiStatus());
-        eventsMissKpiStatus.put("isActive", featuresStatusDto.getEventMissKpiStatus());
-        eventsMissKpiStatus.put("request", "http://goggle.com");
-        eventsMissKpiStatus.put("titleName", "Мисс КПИ");
-        eventsMissKpiStatus.put("logoImageURL", "http://..");
-        eventsStatusList.add(eventsMissKpiStatus);
+        populateFeatures(eventsStatusList, "features.events.Main", featuresStatusDto.getEventStatus(), "Все ивенты");
+//        populateFeatures(eventsStatusList, "features.events.Miss_Kpi", featuresStatusDto.getEventMissKpiStatus(), "Мисс КПИ");
 
         responseObject.put("events", eventsStatusList);
+//        populateOtherFeatures(responseObject);
+        JSONObject object = new JSONObject();
+        object.put("response", responseObject);
+        return object;
+    }
 
+    private void populateFeatures(List<JSONObject> eventsStatusList, String feature,
+                                  String eventMissKpiStatus, String featureName) {
+        JSONObject eventsMissKpiStatus = new JSONObject();
+        eventsMissKpiStatus.put(feature, eventMissKpiStatus);
+        eventsMissKpiStatus.put("isActive", eventMissKpiStatus);
+        eventsMissKpiStatus.put("request", "https://events-core.herokuapp.com/api/events/");
+        eventsMissKpiStatus.put("titleName", featureName);
+        eventsMissKpiStatus.put("logoImageURL", "http://..");
+        eventsStatusList.add(eventsMissKpiStatus);
+    }
+
+    private void populateOtherFeatures(JSONObject responseObject) {
         List<JSONObject> otherStatusList = new ArrayList<>();
 
         JSONObject university = new JSONObject();
@@ -46,9 +51,5 @@ public class FeaturesStatusService {
 
         otherStatusList.add(students);
         responseObject.put("other", otherStatusList);
-
-        JSONObject object = new JSONObject();
-        object.put("response", responseObject);
-        return object;
     }
 }
