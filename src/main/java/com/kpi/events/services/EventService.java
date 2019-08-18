@@ -93,11 +93,20 @@ public class EventService implements IService<Event> {
         Event eventToLike = eventRepository.findById(eventId)
                 .orElseThrow(RuntimeException::new);
         User persistedUser = userRepository.findByLogin(user.getLogin());
-        eventToLike.getLikes().add(persistedUser);
-        return convertToDto(eventToLike);
+        setOrDeleteLike(eventToLike, persistedUser);
+        return convertToDto(eventToLike, persistedUser);
     }
 
-    private EventDto convertToDto(Event event) {
+    private void setOrDeleteLike(Event eventToLike, User persistedUser) {
+        Set<User> likes = eventToLike.getLikes();
+        if (likes.contains(persistedUser)) {
+            likes.remove(persistedUser);
+        } else {
+            likes.add(persistedUser);
+        }
+    }
+
+    private EventDto convertToDto(Event event, User user) {
         return EventDto.builder()
                 .id(event.getId())
                 .description(event.getDescription())
@@ -105,7 +114,11 @@ public class EventService implements IService<Event> {
                 .title(event.getTitle())
                 .likes(event.getLikes().size())
                 .locationDto(event.getLocation())
-                .isLiked(true)
+                .isLiked(checkIfLiked(event, user))
                 .build();
+    }
+
+    private boolean checkIfLiked(Event event, User user) {
+        return event.getLikes().contains(user);
     }
 }
