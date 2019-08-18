@@ -26,7 +26,6 @@ import static com.kpi.events.utils.Constants.WRONG_INDEX;
 public class EventService implements IService<Event> {
 
     @Autowired
-    @Qualifier("eventRepository")
     private EventRepository eventRepository;
 
     @Autowired

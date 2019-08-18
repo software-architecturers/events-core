@@ -4,7 +4,6 @@ import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.services.EventService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,9 +20,6 @@ public class EventController {
 
     @Autowired
     private EventService service;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @PutMapping("/events/like/{id}")
     public EventDto likeEvent(@PathVariable(name = "id") long eventId) {
