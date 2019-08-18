@@ -48,6 +48,20 @@ public class JwtTokenUtil implements Serializable {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
+    
+    public String generateRefresh(User user) {
+    	
+    	Claims claims = Jwts.claims().setSubject(Long.toString(user.getId()));//TODO: getId
+      
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuer("https://devglan.com")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_SECONDS*1000))
+                .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
+                .compact();
+        
+    }
 
     public String generateToken(User user) {
         return doGenerateToken(user);
@@ -57,7 +71,7 @@ public class JwtTokenUtil implements Serializable {
 
         Claims claims = Jwts.claims().setSubject(Long.toString(user.getId()));//TODO: getId
         claims.put("scopes", user.getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()));
-        claims.put("refreshId", user.getRefreshId());
+       // claims.put("refreshId", user.getRefreshId());
         claims.put("name", user.getLogin());
         
         return Jwts.builder()

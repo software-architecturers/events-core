@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Token {
 	
-	private  String token;
+	private String accessToken;
 }

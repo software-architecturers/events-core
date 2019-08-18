@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -58,6 +59,9 @@ public class User implements UserDetails {
     }
 
     private String email;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<RefreshToken> refreshToken;
 
     //    @NotBlank(message = "Blank first name")
 //    @Size(min = 2, max = 45, message = "Wrong first name size")

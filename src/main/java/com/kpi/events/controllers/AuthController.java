@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.kpi.events.security.models.TokenResponse;
+import com.kpi.events.model.RefreshToken;
 import com.kpi.events.model.User;
 import com.kpi.events.security.models.RegisterDTO;
 import com.kpi.events.security.models.Token;
@@ -16,11 +18,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RestController
 public class AuthController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 //    @PostMapping(value = "/auth/sign_up")
 //    public String signUp(@RequestBody User user) {
@@ -37,15 +39,28 @@ public class AuthController {
         userService.register(user);
         return "";
     }
-
-    @PostMapping(value = "/auth/login")
-    public Token login(@RequestBody User user) {
-        return new Token(userService.login(user));
+    
+    @RequestMapping(value = "/auth/login", method = RequestMethod.POST, produces = "application/json")
+    public TokenResponse login(@RequestBody User user) {
+        System.out.println("login ");
+        TokenResponse token = userService.login(user);
+        return token;
     }
 
-    @PostMapping(value = "/auth/token")
-    public Token refreshToken(@RequestBody Token tokenIn) {
-        return new Token(userService.refresh(tokenIn));
+    @RequestMapping(value = "/auth/token", method = RequestMethod.POST, produces = "application/json")
+    public TokenResponse refreshToken(@RequestBody RefreshToken tokenIn) {
+        System.out.println("refresh ");
+
+        TokenResponse token = userService.refresh(tokenIn);
+
+        return token;
+    }
+	
+
+    
+    @GetMapping("/auth/suc")
+    public String successful() {
+        return "suc";
     }
 
     @ExceptionHandler({ExpiredJwtException.class})
