@@ -1,9 +1,6 @@
 package com.kpi.events.services;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
@@ -12,15 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.kpi.events.model.Event;
 import com.kpi.events.model.RefreshToken;
 import com.kpi.events.model.User;
-import com.kpi.events.model.UserIn;
 import com.kpi.events.model.repository.RefreshTokenRepository;
 import com.kpi.events.model.repository.UserRepository;
 import com.kpi.events.security.filters.JwtTokenUtil;
 import com.kpi.events.security.models.RegisterDTO;
-import com.kpi.events.security.models.Token;
 import com.kpi.events.security.models.TokenResponse;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,12 +25,13 @@ public class UserService implements IService<User> {
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-
     @Autowired
     private UserRepository repository;
-
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
 
 	@Override
 	public List<User> findAll(int size, int page) {
@@ -70,36 +65,13 @@ public class UserService implements IService<User> {
 		
 	}
 
-
 	public User find(String name) {
 		return repository.findByLogin(name);
 		
 	}
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UserRepository userRepository;
- 
-    
-//    public String signUp(User user) {
-//        User dbUser = userRepository.findByLogin(user.getLogin());
-//        if (dbUser != null) {
-//            throw new RuntimeException("User already exist.");
-//        }
-//        User userToCreate = new User();
-//        userToCreate.setLogin(user.getLogin());
-//
-//        userToCreate.setPassword(encode(user.getPassword()));
-//
-//        save(userToCreate);
-//        return jwtTokenUtil.generateToken(userToCreate);
-//    }
-
-
     public TokenResponse login(User user) {
-        User dbUser = userRepository.findByLogin(user.getLogin());
+        User dbUser = repository.findByLogin(user.getLogin());
         if (dbUser == null) {
             throw new RuntimeException("No user with given login exists");
         }
@@ -162,7 +134,7 @@ public class UserService implements IService<User> {
         } else {
         	System.out.println("couldn't find bearer string, will ignore the header");
         }
-        User user = repository.findById(id);
+        User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
         List<RefreshToken> list = user.getRefreshToken().stream().filter(x->x.getToken().equals(token)).collect(Collectors
                 .toCollection(ArrayList::new));
         if(list.size() == 0) {
@@ -193,7 +165,7 @@ public class UserService implements IService<User> {
 
         RefreshToken refresh = new RefreshToken();
         refresh.setToken(tokenResponse.getRefreshToken());
-        refresh.setUser(user);
+//        refresh.setUser(user);
         refreshTokenRepository.save(refresh);
         user.getRefreshToken().add(refresh);
         repository.save(user);
