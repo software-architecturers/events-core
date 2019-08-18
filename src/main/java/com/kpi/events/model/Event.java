@@ -4,14 +4,9 @@ import com.kpi.events.model.dto.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
@@ -20,10 +15,10 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Table(name = "events_table")
 //@NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Event {
-//Todo: creation date, start date, end date, likes, users that will go(first subscribed), creator, location
+//Todo: likes, users that will go(first subscribed), creator, location
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +34,8 @@ public class Event {
 
     private LocalDateTime endDate;
 
+    @ManyToMany
+    private Set<User> likes;
 //    @OneToMany(cascade = CascadeType.ALL)
 //    private List<User> visitors;
 
@@ -58,11 +55,11 @@ public class Event {
     public Event() {
     }
 
-    public Event(long id, String title,/* User creator,*/ LocalDateTime creationDate, LocalDateTime startDate,
+    public Event(long id, String title, Set<User> likes,/* User creator,*/ LocalDateTime creationDate, LocalDateTime startDate,
                  LocalDateTime endDate, /*List<User> visitors,*/ String description, LocationDto location,
                  Set<Image> images) {
-        this.id = id;
-        this.title = title;
+        this.id = id;        this.title = title;
+//        this.likes =
 //        this.creator = creator;
         this.creationDate = creationDate;
         this.startDate = startDate;

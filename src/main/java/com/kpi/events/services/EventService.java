@@ -3,19 +3,21 @@ package com.kpi.events.services;
 import com.kpi.events.config.HibernateUtil;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
+import com.kpi.events.model.User;
+import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.model.repository.EventRepository;
+import com.kpi.events.model.repository.UserRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.kpi.events.utils.Constants.WRONG_INDEX;
@@ -26,6 +28,9 @@ public class EventService implements IService<Event> {
     @Autowired
     @Qualifier("eventRepository")
     private EventRepository eventRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     private ImageService imageService;
@@ -81,5 +86,26 @@ public class EventService implements IService<Event> {
                 .findAllByLocation(
                         leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
                         leftBotPoint.getLongitude(), rightTopPoint.getLongitude());
+    }
+
+    @Transactional
+    public EventDto likeEvent(User user, long eventId) {
+        Event eventToLike = eventRepository.findById(eventId)
+                .orElseThrow(RuntimeException::new);
+        User persistedUser = userRepository.findByLogin(user.getLogin());
+        eventToLike.getLikes().add(persistedUser);
+        return convertToDto(eventToLike);
+    }
+
+    private EventDto convertToDto(Event event) {
+        return EventDto.builder()
+                .id(event.getId())
+                .description(event.getDescription())
+                .imagesLinks(event.getImages().stream().map(Image::getLink).collect(Collectors.toList()))
+                .title(event.getTitle())
+                .likes(event.getLikes().size())
+                .locationDto(event.getLocation())
+                .isLiked(true)
+                .build();
     }
 }

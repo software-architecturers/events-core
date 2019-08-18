@@ -7,18 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -38,11 +36,10 @@ public class User implements UserDetails {
 
     private String userIdGoogle;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 8)
-    private UserRole role;
+    @ManyToMany
+    private Set<Event> likedEvents;
 
-    //    @NotBlank(message = "Blank login")
+//    @NotBlank(message = "Blank login")
 //    @Size(min = 2, max = 45, message = "Wrong login size")
     @Column(name = "login", unique = true, nullable = false)
     private String login;
@@ -60,7 +57,7 @@ public class User implements UserDetails {
 
     private String email;
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<RefreshToken> refreshToken;
 
     //    @NotBlank(message = "Blank first name")
@@ -128,4 +125,41 @@ public class User implements UserDetails {
         return true;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(refreshId, user.refreshId) &&
+                Objects.equals(userIdGoogle, user.userIdGoogle) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(refreshToken, user.refreshToken) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(secondName, user.secondName) &&
+                Objects.equals(priveleges, user.priveleges);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, refreshId, userIdGoogle, login, password, email, refreshToken, firstName, secondName, priveleges);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", refreshId='" + refreshId + '\'' +
+                ", userIdGoogle='" + userIdGoogle + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", refreshToken=" + refreshToken +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", priveleges=" + priveleges +
+                '}';
+    }
 }

@@ -3,16 +3,13 @@ package com.kpi.events.controllers;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
-import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.services.EventService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -21,11 +18,18 @@ import java.util.List;
 @ConditionalOnProperty(name = "features.events.common")
 public class EventController {
 
+
     @Autowired
     private EventService service;
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @PutMapping("/events/like/{id}")
+    public EventDto likeEvent(@PathVariable(name = "id") long eventId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       return service.likeEvent(user, eventId);
+    }
 
     @PostMapping("/events/add")
     public Event createNewEvent(@RequestBody Event event) {
@@ -58,9 +62,4 @@ public class EventController {
         service.delete(id);
     }
 
-    private EventDto convertToDto(Event event) {
-        EventDto eventDto = modelMapper.map(event, EventDto.class);
-        eventDto.setImagesLinks(service.findImageLinks(event.getId()));
-        return eventDto;
-    }
 }
