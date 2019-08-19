@@ -18,12 +18,12 @@ public class LocationController {
     private EventService eventService;
 
     @GetMapping("/events")
-    public List<Event> getEventsOnMap(BigDecimal leftBotLatitude, BigDecimal leftBotLongtitude,
-                                      BigDecimal rightTopLatitude, BigDecimal rightTopLongtitude) {
+    public List<Event> getEventsOnMap(BigDecimal leftBotLatitude, BigDecimal leftBotLongitude,
+                                      BigDecimal rightTopLatitude, BigDecimal rightTopLongitude) {
 
         return eventService
                 .findEventsByLocation(
-                        new LocationDto(leftBotLatitude, leftBotLongtitude),
-                        new LocationDto(rightTopLatitude, rightTopLongtitude));
+                        new LocationDto(leftBotLatitude, leftBotLongitude),
+                        new LocationDto(rightTopLatitude, rightTopLongitude));
     }
 }

@@ -9,12 +9,9 @@ import java.math.BigDecimal;
 @Data
 public class LocationDto {
 
-//    широта
-//    @Column(precision = 4, scale = 8)
+    //широта
     private BigDecimal latitude;
-//    длина
-
-//    @Column(precision = 4, scale = 8)
+    //длина
     private BigDecimal longitude;
 
     private String destination;
