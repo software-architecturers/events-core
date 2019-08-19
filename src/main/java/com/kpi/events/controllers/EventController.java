@@ -17,7 +17,6 @@ import java.util.List;
 @ConditionalOnProperty(name = "features.events.common")
 public class EventController {
 
-
     @Autowired
     private EventService service;
 
@@ -27,13 +26,19 @@ public class EventController {
        return service.likeEvent(user, eventId);
     }
 
+    @PutMapping("/events/visit/{id}")
+    public EventDto visitEvent(@PathVariable(name = "id") long eventId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       return service.visitEvent(user, eventId);
+    }
+
     @PostMapping("/events/add")
-    public Event createNewEvent(@RequestBody Event event) {
+    public EventDto createNewEvent(@RequestBody Event event) {
         return service.save(event);
     }
 
     @GetMapping("/events")
-    public List<Event> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
+    public List<EventDto> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
                                  @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
     }
@@ -49,11 +54,11 @@ public class EventController {
     }
 
     @GetMapping(path = "/events/find/{search}")
-    public List<Event> searchEvents(@PathVariable("search") String search) {
+    public List<EventDto> searchEvents(@PathVariable("search") String search) {
         return service.searchEventLIKEGOOGLE(search);
     }
 
-    @DeleteMapping(path = "/api/events/delete/{id}")
+    @DeleteMapping(path = "/events/delete/{id}")
     public void deleteEvent(@PathVariable("id") long id) {
         service.delete(id);
     }
