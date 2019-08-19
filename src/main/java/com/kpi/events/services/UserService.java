@@ -86,7 +86,7 @@ public class UserService implements IService<User> {
         RefreshToken refresh = new RefreshToken();
 
         refresh.setToken(token.getRefreshToken());
-        refresh.setUser(dbUser);
+//        refresh.setUser(dbUser);
         refreshTokenRepository.save(refresh);
         dbUser.getRefreshToken().add(refresh);
         repository.save(dbUser);
