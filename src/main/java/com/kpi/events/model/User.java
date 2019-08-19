@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Entity
 @Table(name = "users_table")
 @Data
@@ -125,7 +124,6 @@ public class User implements UserDetails {
                 Objects.equals(login, user.login) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(email, user.email) &&
-//                Objects.equals(refreshToken, user.refreshToken) &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(secondName, user.secondName) &&
                 Objects.equals(priveleges, user.priveleges);
@@ -145,7 +143,7 @@ public class User implements UserDetails {
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-//                ", refreshToken=" + refreshToken +
+                ", refreshToken=" + refreshToken +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", priveleges=" + priveleges +

@@ -2,7 +2,6 @@ package com.kpi.events.model.repository;
 
 import com.kpi.events.model.Event;
 
-import com.kpi.events.model.dto.LocationDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

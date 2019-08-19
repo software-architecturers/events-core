@@ -21,10 +21,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping(value = "/auth/register")
-    public String register(@RequestBody RegisterDTO user) {
-        System.out.println("register ");
+    public ResponseEntity register(@RequestBody RegisterDTO user) {
         userService.register(user);
-        return "";
+        return new ResponseEntity(HttpStatus.OK);
     }
     
     @PostMapping(value = "/auth/login")
@@ -34,20 +33,7 @@ public class AuthController {
 
     @PostMapping(value = "/auth/token")
     public TokenResponse refreshToken(@RequestBody RefreshToken tokenIn) {
-        System.out.println("refresh ");
-
-        TokenResponse token = userService.refresh(tokenIn);
-
-        return token;
+        return userService.refresh(tokenIn);
     }
 
-    @ExceptionHandler({ExpiredJwtException.class})
-    public ResponseEntity<?> handleExpired(ExpiredJwtException e) {
-    	return ResponseEntity.status(401).body("{\"error\": \"" + e.getMessage() + "\"}");
-    }
-
-    @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<?> handleException(RuntimeException e) {
-    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\": \"" + e.getMessage() + "\"}");
-    }
 }

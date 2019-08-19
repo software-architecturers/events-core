@@ -20,12 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.kpi.events.utils.Constants.WRONG_INDEX;
 
 @Service
-public class EventService /*implements IService<Event>*/ {
+public class EventService /* implements IService<EventDto>*/ {
     public static final int VISITORS_SHOWN_LIMIT = 3;
 
     @Autowired
@@ -38,6 +37,7 @@ public class EventService /*implements IService<Event>*/ {
     private ImageService imageService;
 
     //    @Override
+    @Transactional
     public List<EventDto> findAll(int size, int page) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = userRepository.findByLogin(userRequester.getLogin());
@@ -48,7 +48,6 @@ public class EventService /*implements IService<Event>*/ {
                 .collect(Collectors.toList());
     }
 
-    //    @Override
     @Transactional
     public EventDto save(Event entity) {
         List<Image> eventImages = entity.getImages().stream()
@@ -65,7 +64,7 @@ public class EventService /*implements IService<Event>*/ {
 
     }
 
-    //    @Override
+    @Transactional
     public Event find(long id) {
         return eventRepository.findById(id)
                 .orElseThrow(() ->
@@ -84,10 +83,12 @@ public class EventService /*implements IService<Event>*/ {
     }
 
     //    @Override
+    @Transactional
     public void delete(long id) {
         eventRepository.deleteById(id);
     }
 
+    @Transactional
     public List<EventDto> searchEventLIKEGOOGLE(String searchWord) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = userRepository.findByLogin(userRequester.getLogin());
@@ -97,10 +98,7 @@ public class EventService /*implements IService<Event>*/ {
                 .collect(Collectors.toList());
     }
 
-    public List<String> findImageLinks(long id) {
-        return null;
-    }
-
+    @Transactional
     public List<Event> findEventsByLocation(LocationDto leftBotPoint, LocationDto rightTopPoint) {
         return eventRepository
                 .findAllByLocation(
@@ -115,6 +113,15 @@ public class EventService /*implements IService<Event>*/ {
         User persistedUser = userRepository.findByLogin(user.getLogin());
         setOrDeleteLike(eventToLike, persistedUser);
         return convertToDto(eventToLike, persistedUser);
+    }
+
+    @Transactional
+    public EventDto visitEvent(User user, long eventId) {
+        Event eventToVisit = eventRepository.findById(eventId)
+                .orElseThrow(RuntimeException::new);
+        User persistedUser = userRepository.findByLogin(user.getLogin());
+        setOrDeleteVisit(eventToVisit, persistedUser);
+        return convertToDto(eventToVisit, persistedUser);
     }
 
     private void setOrDeleteLike(Event eventToLike, User persistedUser) {
@@ -157,15 +164,6 @@ public class EventService /*implements IService<Event>*/ {
 
     private boolean checkIfLiked(Event event, User user) {
         return event.getLikes().contains(user);
-    }
-
-    @Transactional
-    public EventDto visitEvent(User user, long eventId) {
-        Event eventToVisit = eventRepository.findById(eventId)
-                .orElseThrow(RuntimeException::new);
-        User persistedUser = userRepository.findByLogin(user.getLogin());
-        setOrDeleteVisit(eventToVisit, persistedUser);
-        return convertToDto(eventToVisit, persistedUser);
     }
 
     private void setOrDeleteVisit(Event eventToVisit, User persistedUser) {
