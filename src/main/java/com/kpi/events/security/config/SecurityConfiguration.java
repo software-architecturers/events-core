@@ -51,13 +51,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.csrf().disable().anonymous().and().authorizeRequests().anyRequest().permitAll();
         http.cors();
-        http.csrf().disable().anonymous().and().authorizeRequests().antMatchers("/auth/*")
+        http.csrf().disable().anonymous()
+                .and().authorizeRequests()
+                .antMatchers("/auth/*")
 //                .anonymous().antMatchers(HttpMethod.GET)
-                .anonymous().anyRequest().authenticated()
+                .anonymous()
+                .antMatchers("/api/users/").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
