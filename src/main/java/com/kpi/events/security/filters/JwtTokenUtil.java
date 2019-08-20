@@ -4,6 +4,7 @@ import com.kpi.events.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static com.kpi.events.security.filters.Constants.*;
@@ -18,6 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class JwtTokenUtil implements Serializable {
 
+    @Value("${accessToken.validity}")
+    private String ACCESS_TOKEN_VALIDITY_SECONDS;
+
+    @Value("${refreshToken.validity}")
+    private String REFRESH_TOKEN_VALIDITY_SECONDS;
 
     public long getIdFromToken(String token) {
         return Long.parseLong(getClaimFromToken(token, Claims::getSubject));
@@ -57,7 +63,7 @@ public class JwtTokenUtil implements Serializable {
                 .setClaims(claims)
                 .setIssuer("https://devglan.com")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_SECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(REFRESH_TOKEN_VALIDITY_SECONDS) * 1000))
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
 
@@ -80,7 +86,7 @@ public class JwtTokenUtil implements Serializable {
                 .setClaims(claims)
                 .setIssuer("https://devglan.com")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(ACCESS_TOKEN_VALIDITY_SECONDS) * 1000))
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
     }
