@@ -1,10 +1,14 @@
 package com.kpi.events.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LocationDto {
 
     //широта
@@ -17,11 +21,5 @@ public class LocationDto {
     public LocationDto(BigDecimal latitude, BigDecimal longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public LocationDto(BigDecimal latitude, BigDecimal longitude, String destination) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.destination = destination;
     }
 }
