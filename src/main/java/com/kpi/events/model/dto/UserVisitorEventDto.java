@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class UserVisitorEventDto {
+    private long id;
 
     private String login;
 

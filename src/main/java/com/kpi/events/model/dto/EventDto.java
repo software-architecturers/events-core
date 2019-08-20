@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class EventDto {
+    private long id;
 
     private String title;
 

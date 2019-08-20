@@ -145,6 +145,7 @@ public class EventService /* implements IService<EventDto>*/ {
                 .locationDto(event.getLocation())
                 .isLiked(checkIfLiked(event, user))
                 .creator(UserVisitorEventDto.builder()
+                        .id(user.getId())
                         .login(user.getLogin())
                         .email(user.getEmail())
                         .firstName(user.getFirstName())

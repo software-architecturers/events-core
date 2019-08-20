@@ -11,8 +11,6 @@ import com.kpi.events.model.User;
 import com.kpi.events.security.models.RegisterDTO;
 import com.kpi.events.services.UserService;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
 
 @RestController
 public class AuthController {
@@ -25,7 +23,7 @@ public class AuthController {
         userService.register(user);
         return new ResponseEntity(HttpStatus.OK);
     }
-    
+
     @PostMapping(value = "/auth/login")
     public TokenResponse login(@RequestBody User user) {
         return userService.login(user);
@@ -35,5 +33,4 @@ public class AuthController {
     public TokenResponse refreshToken(@RequestBody RefreshToken tokenIn) {
         return userService.refresh(tokenIn);
     }
-
 }

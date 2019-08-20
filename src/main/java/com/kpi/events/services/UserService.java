@@ -188,6 +188,7 @@ public class UserService implements IService<User> {
 
 	private RegisteredUserDto convertToRegisteredDto(User user) {
 		return RegisteredUserDto.builder()
+				.id(user.getId())
 				.firstName(user.getFirstName())
 				.email(user.getFirstName())
 				.login(user.getLogin())
