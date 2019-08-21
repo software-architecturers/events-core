@@ -5,9 +5,8 @@ import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
-import com.kpi.events.model.dto.EventVisitorsDto;
 import com.kpi.events.model.dto.LocationDto;
-import com.kpi.events.model.dto.UserVisitorEventDto;
+import com.kpi.events.model.mapper.EventMapper;
 import com.kpi.events.model.repository.EventRepository;
 import com.kpi.events.model.repository.UserRepository;
 import org.hibernate.Session;
@@ -25,7 +24,9 @@ import static com.kpi.events.utils.Constants.WRONG_INDEX;
 
 @Service
 public class EventService /* implements IService<EventDto>*/ {
-    public static final int VISITORS_SHOWN_LIMIT = 3;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Autowired
     private EventRepository eventRepository;
@@ -44,7 +45,7 @@ public class EventService /* implements IService<EventDto>*/ {
 
         return eventRepository.findAll(PageRequest.of(page, size)).getContent()
                 .stream()
-                .map(event -> convertToDto(event, persistedUser))
+                .map(event -> eventMapper.convertToDto(event, persistedUser))
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +61,7 @@ public class EventService /* implements IService<EventDto>*/ {
 
         User persistedUser = userRepository.findByLogin(creator.getLogin());
         entity.setCreator(persistedUser);
-        return convertToDto(eventRepository.save(entity), persistedUser);
+        return eventMapper.convertToDto(eventRepository.save(entity), persistedUser);
 
     }
 
@@ -94,7 +95,7 @@ public class EventService /* implements IService<EventDto>*/ {
         User persistedUser = userRepository.findByLogin(userRequester.getLogin());
         return eventRepository.findEventByDescriptionContainingOrTitleContaining(searchWord, searchWord)
                 .stream()
-                .map(event -> convertToDto(event, persistedUser))
+                .map(event -> eventMapper.convertToDto(event, persistedUser))
                 .collect(Collectors.toList());
     }
 
@@ -112,7 +113,7 @@ public class EventService /* implements IService<EventDto>*/ {
                 .orElseThrow(RuntimeException::new);
         User persistedUser = userRepository.findByLogin(user.getLogin());
         setOrDeleteLike(eventToLike, persistedUser);
-        return convertToDto(eventToLike, persistedUser);
+        return eventMapper.convertToDto(eventToLike, persistedUser);
     }
 
     @Transactional
@@ -121,7 +122,7 @@ public class EventService /* implements IService<EventDto>*/ {
                 .orElseThrow(RuntimeException::new);
         User persistedUser = userRepository.findByLogin(user.getLogin());
         setOrDeleteVisit(eventToVisit, persistedUser);
-        return convertToDto(eventToVisit, persistedUser);
+        return eventMapper.convertToDto(eventToVisit, persistedUser);
     }
 
     private void setOrDeleteLike(Event eventToLike, User persistedUser) {
@@ -131,41 +132,6 @@ public class EventService /* implements IService<EventDto>*/ {
         } else {
             likes.add(persistedUser);
         }
-    }
-
-    private EventDto convertToDto(Event event, User user) {
-        return EventDto.builder()
-                .id(event.getId())
-                .description(event.getDescription())
-                .imagesLinks(event.getImages()
-                        .stream()
-                        .map(Image::getLink)
-                        .collect(Collectors.toList()))
-                .title(event.getTitle())
-                .likes(event.getLikes().size())
-                .locationDto(event.getLocation())
-                .isLiked(checkIfLiked(event, user))
-                .creator(UserVisitorEventDto.builder()
-                        .id(user.getId())
-                        .login(user.getLogin())
-                        .email(user.getEmail())
-                        .firstName(user.getFirstName())
-                        .secondName(user.getSecondName())
-                        .build())
-                .visitors(new EventVisitorsDto(event.getVisitors().stream().limit(VISITORS_SHOWN_LIMIT).map(visitor ->
-                        UserVisitorEventDto.builder()
-                                .login(visitor.getLogin())
-                                .email(visitor.getEmail())
-                                .firstName(visitor.getFirstName())
-                                .secondName(visitor.getSecondName())
-                                .build())
-                        .collect(Collectors.toSet()),
-                        event.getVisitors().size()))
-                .build();
-    }
-
-    private boolean checkIfLiked(Event event, User user) {
-        return event.getLikes().contains(user);
     }
 
     private void setOrDeleteVisit(Event eventToVisit, User persistedUser) {

@@ -3,6 +3,7 @@ package com.kpi.events.model.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,9 +21,19 @@ public class EventDto {
 
     private long likes;
 
-    private boolean isLiked;
+    private boolean liked;
+
+    private boolean visited;
+
+    private boolean mine;
 
     private EventVisitorsDto visitors;
 
     private UserVisitorEventDto creator;
+
+    private LocalDateTime creationDate;
+
+    private LocalDateTime startDate;
+
+    private LocalDateTime endDate;
 }

@@ -63,7 +63,7 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> priveleges = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "creator")
     private Set<Event> createdEvents;
 
     @ManyToMany

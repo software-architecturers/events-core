@@ -190,10 +190,10 @@ public class UserService implements IService<User> {
 		return RegisteredUserDto.builder()
 				.id(user.getId())
 				.firstName(user.getFirstName())
-				.email(user.getFirstName())
+				.secondName(user.getSecondName())
+				.email(user.getEmail())
 				.login(user.getLogin())
 				.password(user.getPassword())
-				.secondName(user.getSecondName())
 				.build();
 	}
 }
