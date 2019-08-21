@@ -135,6 +135,7 @@ public class EventService /* implements IService<EventDto>*/ {
 
     private EventDto convertToDto(Event event, User user) {
         return EventDto.builder()
+                .id(event.getId())
                 .description(event.getDescription())
                 .imagesLinks(event.getImages()
                         .stream()
