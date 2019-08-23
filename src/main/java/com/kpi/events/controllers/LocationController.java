@@ -1,6 +1,7 @@
 package com.kpi.events.controllers;
 
 import com.kpi.events.model.Event;
+import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class LocationController {
     private EventService eventService;
 
     @GetMapping("/events")
-    public List<Event> getEventsOnMap(BigDecimal leftBotLatitude, BigDecimal leftBotLongitude,
-                                      BigDecimal rightTopLatitude, BigDecimal rightTopLongitude) {
+    public List<EventDto> getEventsOnMap(BigDecimal leftBotLatitude, BigDecimal leftBotLongitude,
+                                         BigDecimal rightTopLatitude, BigDecimal rightTopLongitude) {
 
         return eventService
                 .findEventsByLocation(

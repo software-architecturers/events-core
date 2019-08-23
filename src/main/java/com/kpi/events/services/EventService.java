@@ -100,11 +100,14 @@ public class EventService /* implements IService<EventDto>*/ {
     }
 
     @Transactional
-    public List<Event> findEventsByLocation(LocationDto leftBotPoint, LocationDto rightTopPoint) {
+    public List<EventDto> findEventsByLocation(LocationDto leftBotPoint, LocationDto rightTopPoint) {
+        User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User persistedUser = userRepository.findByLogin(userRequester.getLogin());
         return eventRepository
                 .findAllByLocation(
                         leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
-                        leftBotPoint.getLongitude(), rightTopPoint.getLongitude());
+                        leftBotPoint.getLongitude(), rightTopPoint.getLongitude())
+                .stream().map(event-> eventMapper.convertToDto(event, persistedUser)).collect(Collectors.toList());
     }
 
     @Transactional
