@@ -153,9 +153,13 @@ public class UserService implements IService<User> {
 
 
 		String token = tokenIn.getToken();
-
-		User user = findByRefreshToken(tokenIn);
-
+		User user = null;
+		try {
+			user = findByRefreshToken(tokenIn);
+		}catch (Throwable throwable) {
+			System.out.println("error" + throwable.getMessage());
+			throw new UserNotFoundException("Invalid token");
+		}
 		if (!jwtTokenUtil.validateToken(token, user))
 			throw new RuntimeException();
 		if (user == null) {
