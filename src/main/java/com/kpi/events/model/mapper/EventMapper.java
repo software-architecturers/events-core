@@ -28,6 +28,7 @@ public class EventMapper {
                 .likes(event.getLikes().size())
                 .locationDto(event.getLocation())
                 .liked(checkIfLiked(event, userRequester))
+                .creationDate(event.getCreationDate())
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .mine(checkIfMine(event, userRequester))
