@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 res.setStatus(401);
                 res.getWriter().write("{\"status\": \"expired\"}");
                 isCont = false;
-            } catch(SignatureException e){
+            } catch (SignatureException e) {
                 logger.error("Authentication Failed. Username or Password not valid.");
             }
         } else {
@@ -57,15 +57,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .orElseThrow(UserNotFoundException::new);
 
             if (jwtTokenUtil.validateToken(token, user)) {
-                TokenAuthentication authentication = new TokenAuthentication(token ,user.getAuthorities(), true, user);
+                TokenAuthentication authentication = new TokenAuthentication(token, user.getAuthorities(), true, user);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                 logger.info("authenticated user " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                
+
             }
         }
-        if(isCont) {
-        	chain.doFilter(req, res);
+        if (isCont) {
+            chain.doFilter(req, res);
         }
     }
 }

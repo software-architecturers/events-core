@@ -1,5 +1,6 @@
 package com.kpi.events.model;
 
+import com.kpi.events.model.dto.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -72,12 +73,34 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "visitors")
     private Set<Event> visitedEvents;
 
+    @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "longitude", column = @Column(scale = 14, precision = 18)),
+            @AttributeOverride(name = "latitude", column = @Column(scale = 14, precision = 18))
+    })
+    private LocationDto userLocation;
+
+    /**
+     * The users follow you
+     * (Your subscribers)
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<User> subscribers;
+
+    /**
+     * The users you follow
+     * (You are subscriber)
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<User> subscriptions;
+
+    @OneToOne
+    private Image image;
+
     public User(Map<String, String> authInfo) {
         this.userIdGoogle = authInfo.get("sub");
         this.login = authInfo.get("email");
     }
-
-
 
     public String getPassword() {
         return password;
