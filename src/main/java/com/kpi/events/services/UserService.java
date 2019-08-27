@@ -4,9 +4,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
+import com.kpi.events.model.dto.FollowedUserDto;
 import com.kpi.events.model.dto.RegisteredUserDto;
+import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import com.kpi.events.security.models.TokenResponse;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService implements IService<User> {
@@ -182,12 +186,11 @@ public class UserService implements IService<User> {
 		return encoder.encode(s);
 	}
 
-	public List<RegisteredUserDto> getUsers() {
+	public List<RegisteredUserDtoWithToken> getUsers() {
 		return repository.findAll()
 				.stream()
-				.map(this::convertToRegisteredDto)
+				.map(this::convertToRegisteredUserDtoWithToken)
 				.collect(Collectors.toList());
-
 	}
 
 	private RegisteredUserDto convertToRegisteredDto(User user) {
@@ -200,4 +203,34 @@ public class UserService implements IService<User> {
 				.password(user.getPassword())
 				.build();
 	}
+	private RegisteredUserDtoWithToken convertToRegisteredUserDtoWithToken(User user) {
+		return RegisteredUserDtoWithToken.builder()
+				.userDto(convertToRegisteredDto(user))
+				.userToken(user.getRefreshToken())
+				.build();
+	}
+
+	/**
+	 * @param userId id of user which you want to follow
+	 *               persisted user - user which pushed button subscribe
+	 *               userToFollow - user on which we do subscribe
+	 * @return updated followed user
+	 */
+	@Transactional
+    public FollowedUserDto subscribeOnUser(long userId) {
+		User userToFollow = repository.findById(userId).orElseThrow(UserNotFoundException::new);
+		User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User persistedUser = repository.findByLogin(userRequester.getLogin());
+		userToFollow.getSubscribers().add(persistedUser);
+		persistedUser.getSubscriptions().add(userToFollow);
+		return convertToFollowerDto(userToFollow);
+	}
+
+    private FollowedUserDto convertToFollowerDto(User userToFollow) {
+        return FollowedUserDto.builder()
+                .user(convertToRegisteredDto(userToFollow))
+                .subscribers(userToFollow.getSubscribers().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
+                .subscriptions(userToFollow.getSubscriptions().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
+                .build();
+    }
 }
