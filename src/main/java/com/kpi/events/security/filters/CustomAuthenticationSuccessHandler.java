@@ -1,5 +1,6 @@
 package com.kpi.events.security.filters;
 
+import com.kpi.events.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -35,7 +36,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Map<String, Object> attributes = oidcUser.getAttributes();
         System.out.println(attributes);
         String email = (String) attributes.get("email");
-        User user = userRepository.findByLogin(email);
+        User user = userRepository.findByLogin(email).orElseThrow(UserNotFoundException::new);
         if (user == null) {
         	user = new User();
         	user.setLogin(email);

@@ -1,6 +1,7 @@
 package com.kpi.events.services;
 
 import com.kpi.events.config.HibernateUtil;
+import com.kpi.events.exceptions.UserNotFoundException;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
@@ -41,7 +42,7 @@ public class EventService /* implements IService<EventDto>*/ {
     @Transactional
     public List<EventDto> findAll(int size, int page) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User persistedUser = userRepository.findByLogin(userRequester.getLogin());
+        User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
 
         return eventRepository.findAll(PageRequest.of(page, size)).getContent()
                 .stream()
@@ -59,7 +60,7 @@ public class EventService /* implements IService<EventDto>*/ {
 
         User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User persistedUser = userRepository.findByLogin(creator.getLogin());
+        User persistedUser = userRepository.findByLogin(creator.getLogin()).orElseThrow(UserNotFoundException::new);
         entity.setCreator(persistedUser);
         return eventMapper.convertToDto(eventRepository.save(entity), persistedUser);
 
@@ -92,7 +93,7 @@ public class EventService /* implements IService<EventDto>*/ {
     @Transactional
     public List<EventDto> searchEventLIKEGOOGLE(String searchWord) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User persistedUser = userRepository.findByLogin(userRequester.getLogin());
+        User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         return eventRepository.findEventByDescriptionContainingOrTitleContaining(searchWord, searchWord)
                 .stream()
                 .map(event -> eventMapper.convertToDto(event, persistedUser))
@@ -102,7 +103,7 @@ public class EventService /* implements IService<EventDto>*/ {
     @Transactional
     public List<EventDto> findEventsByLocation(LocationDto leftBotPoint, LocationDto rightTopPoint) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User persistedUser = userRepository.findByLogin(userRequester.getLogin());
+        User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         return eventRepository
                 .findAllByLocation(
                         leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
@@ -114,7 +115,7 @@ public class EventService /* implements IService<EventDto>*/ {
     public EventDto likeEvent(User user, long eventId) {
         Event eventToLike = eventRepository.findById(eventId)
                 .orElseThrow(RuntimeException::new);
-        User persistedUser = userRepository.findByLogin(user.getLogin());
+        User persistedUser = userRepository.findByLogin(user.getLogin()).orElseThrow(UserNotFoundException::new);
         setOrDeleteLike(eventToLike, persistedUser);
         return eventMapper.convertToDto(eventToLike, persistedUser);
     }
@@ -123,7 +124,7 @@ public class EventService /* implements IService<EventDto>*/ {
     public EventDto visitEvent(User user, long eventId) {
         Event eventToVisit = eventRepository.findById(eventId)
                 .orElseThrow(RuntimeException::new);
-        User persistedUser = userRepository.findByLogin(user.getLogin());
+        User persistedUser = userRepository.findByLogin(user.getLogin()).orElseThrow(UserNotFoundException::new);
         setOrDeleteVisit(eventToVisit, persistedUser);
         return eventMapper.convertToDto(eventToVisit, persistedUser);
     }

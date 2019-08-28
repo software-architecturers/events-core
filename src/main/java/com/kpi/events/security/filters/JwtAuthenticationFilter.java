@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.error(USERNAME_FROM_TOKEN, e);
             } catch (ExpiredJwtException e) {
                 logger.warn(EXPIRED_TOKEN, e);
-                res.setStatus(401);
+                res.sendError(403);
                 res.getWriter().write("{\"status\": \"expired\"}");
                 isCont = false;
             } catch (SignatureException e) {
@@ -59,9 +59,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtTokenUtil.validateToken(token, user)) {
                 TokenAuthentication authentication = new TokenAuthentication(token, user.getAuthorities(), true, user);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                logger.info("authenticated user " + username + ", setting security context");
+                logger.info("authenticated user " + user.getLogin() + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
             }
         }
         if (isCont) {

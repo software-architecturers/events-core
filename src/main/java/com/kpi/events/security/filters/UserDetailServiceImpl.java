@@ -1,6 +1,7 @@
 package com.kpi.events.security.filters;
 
 
+import com.kpi.events.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(email);
+        User user = userRepository.findByLogin(email).orElseThrow(UserNotFoundException::new);
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }

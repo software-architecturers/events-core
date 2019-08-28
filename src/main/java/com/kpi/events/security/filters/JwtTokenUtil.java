@@ -92,8 +92,13 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public Boolean validateToken(String token, User userDetails) {
-        final long id = getIdFromToken(token);
-        return id == userDetails.getId() && !isTokenExpired(token);
+        try {
+            final long id = getIdFromToken(token);
+            return id == userDetails.getId() && !isTokenExpired(token);
+        } catch (Throwable throwable) {
+            System.out.println("PIZDEC");
+            return false;
+        }
     }
 
     public String resolveToken(HttpServletRequest req) {
