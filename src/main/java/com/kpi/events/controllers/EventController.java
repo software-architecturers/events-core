@@ -53,7 +53,7 @@ public class EventController {
         return service.update(eventId, newEvent);
     }
 
-    @GetMapping(path = "/events/find/{search}")
+    @GetMapping(path = "/events/find/q={search}")
     public List<EventDto> searchEvents(@PathVariable("search") String search) {
         return service.searchEventLIKEGOOGLE(search);
     }

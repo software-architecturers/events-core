@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
 import com.kpi.events.model.dto.FollowedUserDto;
+import com.kpi.events.model.dto.PersonalCabinetDto;
 import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,6 +238,35 @@ public class UserService implements IService<User> {
                 .user(convertToRegisteredDto(userToFollow))
                 .subscribers(userToFollow.getSubscribers().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
                 .subscriptions(userToFollow.getSubscriptions().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
+                .build();
+    }
+
+    public PersonalCabinetDto getUserInfo() {
+        User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
+        return convertToPersonalCabinetDto(persistedUser);
+    }
+
+    private PersonalCabinetDto convertToPersonalCabinetDto(User persistedUser) {
+        List<RegisteredUserDto> subscribers = persistedUser.getSubscribers()
+                .stream()
+                .map(this::convertToRegisteredDto)
+                .collect(Collectors.toList());
+
+        List<RegisteredUserDto> subscriptions = persistedUser.getSubscriptions()
+                .stream()
+                .map(this::convertToRegisteredDto)
+                .collect(Collectors.toList());
+
+        return PersonalCabinetDto.builder()
+                .id(persistedUser.getId())
+                .login(persistedUser.getLogin())
+                .firstName(persistedUser.getFirstName())
+                .secondName(persistedUser.getSecondName())
+                .email(persistedUser.getEmail())
+                .image(persistedUser.getImage())
+                .subscribers(subscribers)
+                .subscriptions(subscriptions)
                 .build();
     }
 }

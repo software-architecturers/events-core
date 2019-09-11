@@ -1,11 +1,14 @@
 package com.kpi.events.controllers;
 
 import com.kpi.events.model.dto.FollowedUserDto;
+import com.kpi.events.model.dto.PersonalCabinetDto;
+import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
 import com.kpi.events.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,8 +25,13 @@ public class UserController {
     }
 
 
-        @PutMapping(path = "/subscribe/{id}")
+    @PutMapping(path = "/subscribe/{id}")
     public FollowedUserDto subscribe(@PathVariable("id") long userId) {
         return userService.subscribeOnUser(userId);
+    }
+
+    @GetMapping(path = "users/me")
+    public PersonalCabinetDto getInfoAboutMe() {
+        return userService.getUserInfo();
     }
 }
