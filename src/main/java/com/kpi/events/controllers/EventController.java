@@ -24,13 +24,13 @@ public class EventController {
     @PutMapping("/events/like/{id}")
     public EventDto likeEvent(@PathVariable(name = "id") long eventId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       return service.likeEvent(user, eventId);
+        return service.likeEvent(user, eventId);
     }
 
     @PutMapping("/events/visit/{id}")
     public EventDto visitEvent(@PathVariable(name = "id") long eventId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       return service.visitEvent(user, eventId);
+        return service.visitEvent(user, eventId);
     }
 
     @PostMapping("/events/add")
@@ -40,7 +40,7 @@ public class EventController {
 
     @GetMapping("/events")
     public List<EventDto> getEvents(@RequestParam(required = false, defaultValue = "10") int limit,
-                                 @RequestParam(required = false, defaultValue = "0") int page) {
+                                    @RequestParam(required = false, defaultValue = "0") int page) {
         return service.findAll(limit, page);
     }
 
