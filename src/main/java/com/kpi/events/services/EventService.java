@@ -7,6 +7,7 @@ import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.model.dto.LocationDto;
+import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.model.mapper.EventMapper;
 import com.kpi.events.model.repository.EventRepository;
 import com.kpi.events.model.repository.UserRepository;
@@ -37,6 +38,9 @@ public class EventService /* implements IService<EventDto>*/ {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private UserService userService;
 
     //    @Override
     @Transactional
@@ -145,5 +149,13 @@ public class EventService /* implements IService<EventDto>*/ {
         } else {
             visitors.add(persistedUser);
         }
+    }
+
+    public List<RegisteredUserDto> getEventVisitors(long eventId) {
+        return eventRepository
+                .findById(eventId)
+                .orElseThrow(RuntimeException::new).getVisitors()
+                .stream().map(user -> userService.convertToRegisteredDto(user))
+                .collect(Collectors.toList());
     }
 }

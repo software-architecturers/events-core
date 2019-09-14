@@ -3,6 +3,7 @@ package com.kpi.events.controllers;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dto.EventDto;
+import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -46,6 +47,11 @@ public class EventController {
     @GetMapping(path = "/events/{id}")
     public Event getEvent(@PathVariable("id") long eventId) {
         return service.find(eventId);
+    }
+
+    @GetMapping(path = "/events/{id}/visitors")
+    public  List<RegisteredUserDto>  getEventVisitors(@PathVariable("id") long eventId) {
+        return service.getEventVisitors(eventId);
     }
 
     @PutMapping(path = "/events/update/{id}")
