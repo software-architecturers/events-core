@@ -24,13 +24,11 @@ public class PersonalCabinetDto {
 
     private String secondName;
 
-    private String password;
-
     private Image image;
 
-    private List<RegisteredUserDto> subscribers;
+    private Integer subscribers;
 
-    private List<RegisteredUserDto> subscriptions;
+    private Integer subscriptions;
 
 }
 

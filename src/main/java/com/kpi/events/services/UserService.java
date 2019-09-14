@@ -57,6 +57,10 @@ public class UserService implements IService<User> {
         return repository.save(entity);
     }
 
+    public PersonalCabinetDto getUser(long id) {
+        return convertToPersonalCabinetDto(find(id));
+    }
+
     @Override
     public User find(long id) {
         return repository.findById(id)
@@ -199,7 +203,7 @@ public class UserService implements IService<User> {
                 .collect(Collectors.toList());
     }
 
-    private RegisteredUserDto convertToRegisteredDto(User user) {
+    public RegisteredUserDto convertToRegisteredDto(User user) {
         return RegisteredUserDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
@@ -247,7 +251,7 @@ public class UserService implements IService<User> {
         return convertToPersonalCabinetDto(persistedUser);
     }
 
-    private PersonalCabinetDto convertToPersonalCabinetDto(User persistedUser) {
+    public PersonalCabinetDto convertToPersonalCabinetDto(User persistedUser) {
         List<RegisteredUserDto> subscribers = persistedUser.getSubscribers()
                 .stream()
                 .map(this::convertToRegisteredDto)
@@ -265,8 +269,22 @@ public class UserService implements IService<User> {
                 .secondName(persistedUser.getSecondName())
                 .email(persistedUser.getEmail())
                 .image(persistedUser.getImage())
-                .subscribers(subscribers)
-                .subscriptions(subscriptions)
+                .subscribers(subscribers.size())
+                .subscriptions(subscriptions.size())
                 .build();
+    }
+
+    public List<RegisteredUserDto> getSubscriptions(long id) {
+        return find(id).getSubscriptions()
+                .stream()
+                .map(this::convertToRegisteredDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<RegisteredUserDto> getSubscribers(long id) {
+        return find(id).getSubscribers()
+                .stream()
+                .map(this::convertToRegisteredDto)
+                .collect(Collectors.toList());
     }
 }

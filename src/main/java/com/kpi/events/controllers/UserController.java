@@ -34,4 +34,19 @@ public class UserController {
     public PersonalCabinetDto getInfoAboutMe() {
         return userService.getUserInfo();
     }
+
+    @GetMapping(path = "users/{id}")
+    public PersonalCabinetDto getUser(@PathVariable long id) {
+        return userService.getUser(id);
+    }
+
+    @GetMapping(path = "users/{id}/subscribers")
+    public List<RegisteredUserDto> getSubscribers(@PathVariable long id) {
+        return userService.getSubscribers(id);
+    }
+
+    @GetMapping(path = "users/{id}/subscriptions")
+    public List<RegisteredUserDto> getSubscriptions(@PathVariable long id) {
+        return userService.getSubscriptions(id);
+    }
 }
