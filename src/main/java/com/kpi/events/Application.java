@@ -11,6 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 @EnableJpaRepositories
 public class Application {
+//    TODO: consume DTOs in controllers
+//    TODO: rethink about all the DTOs
+//    TODO: replace some logic by SQL queries
+//    TODO: fix Security issues
+
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
