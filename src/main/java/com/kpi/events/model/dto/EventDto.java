@@ -29,7 +29,7 @@ public class EventDto {
 
     private EventVisitorsDto visitors;
 
-    private UserVisitorEventDto creator;
+    private PersonalCabinetDto creator;
 
     private LocalDateTime creationDate;
 

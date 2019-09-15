@@ -3,9 +3,7 @@ package com.kpi.events.model.mapper;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
-import com.kpi.events.model.dto.EventDto;
-import com.kpi.events.model.dto.EventVisitorsDto;
-import com.kpi.events.model.dto.UserVisitorEventDto;
+import com.kpi.events.model.dto.*;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -32,12 +30,14 @@ public class EventMapper {
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .mine(checkIfMine(event, userRequester))
-                .creator(UserVisitorEventDto.builder()
+                .creator(PersonalCabinetDto.builder()
                         .id(event.getCreator().getId())
                         .login(event.getCreator().getLogin())
                         .email(event.getCreator().getEmail())
                         .firstName(event.getCreator().getFirstName())
                         .secondName(event.getCreator().getSecondName())
+                        .subscribers(event.getCreator().getSubscribers().size())
+                        .subscriptions(event.getCreator().getSubscriptions().size())
                         .build())
                 .visited(checkIfVisited(event, userRequester))
                 .visitors(new EventVisitorsDto(event.getVisitors()

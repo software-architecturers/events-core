@@ -23,7 +23,6 @@ public class UserController {
         return userService.getUsers();
     }
 
-
     @PutMapping(path = "/subscribe/{id}")
     public FollowedUserDto subscribe(@PathVariable("id") long userId) {
         return userService.subscribeOnUser(userId);
