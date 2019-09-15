@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class EventVisitorsDto {
 
-    private Set<UserVisitorEventDto> users;
+    private Set<PersonalCabinetDto> users;
 
     private long count;
 }

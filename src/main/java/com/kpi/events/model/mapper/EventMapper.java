@@ -44,11 +44,13 @@ public class EventMapper {
                         .stream()
                         .limit(VISITORS_SHOWN_LIMIT)
                         .map(visitor ->
-                            UserVisitorEventDto.builder()
+                            PersonalCabinetDto.builder()
                                     .login(visitor.getLogin())
                                     .email(visitor.getEmail())
                                     .firstName(visitor.getFirstName())
                                     .secondName(visitor.getSecondName())
+                                    .subscribers(visitor.getSubscribers().size())
+                                    .subscriptions(visitor.getSubscriptions().size())
                                     .build())
                         .collect(Collectors.toSet()),
                         event.getVisitors().size()))
