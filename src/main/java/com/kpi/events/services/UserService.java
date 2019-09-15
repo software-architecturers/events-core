@@ -8,6 +8,7 @@ import com.kpi.events.model.dto.FollowedUserDto;
 import com.kpi.events.model.dto.PersonalCabinetDto;
 import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
+import com.kpi.events.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +42,8 @@ public class UserService implements IService<User> {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private UserMapper mapper;
 
     @Override
     public List<User> findAll(int size, int page) {
@@ -58,7 +61,7 @@ public class UserService implements IService<User> {
     }
 
     public PersonalCabinetDto getUser(long id) {
-        return convertToPersonalCabinetDto(find(id));
+        return mapper.convertToPersonalCabinetDto(find(id));
     }
 
     @Override
@@ -199,27 +202,24 @@ public class UserService implements IService<User> {
     public List<RegisteredUserDtoWithToken> getUsers() {
         return repository.findAll()
                 .stream()
-                .map(this::convertToRegisteredUserDtoWithToken)
+                .map(mapper::convertToRegisteredUserDtoWithToken)
                 .collect(Collectors.toList());
     }
 
-    public RegisteredUserDto convertToRegisteredDto(User user) {
-        return RegisteredUserDto.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .secondName(user.getSecondName())
-                .email(user.getEmail())
-                .login(user.getLogin())
-                .password(user.getPassword())
-                .build();
+    public List<RegisteredUserDto> getSubscriptions(long id) {
+        return find(id).getSubscriptions()
+                .stream()
+                .map(mapper::convertToRegisteredDto)
+                .collect(Collectors.toList());
     }
 
-    private RegisteredUserDtoWithToken convertToRegisteredUserDtoWithToken(User user) {
-        return RegisteredUserDtoWithToken.builder()
-                .userDto(convertToRegisteredDto(user))
-                .userToken(user.getRefreshToken())
-                .build();
+    public List<RegisteredUserDto> getSubscribers(long id) {
+        return find(id).getSubscribers()
+                .stream()
+                .map(mapper::convertToRegisteredDto)
+                .collect(Collectors.toList());
     }
+
 
     /**
      * @param userId id of user which you want to follow
@@ -234,57 +234,17 @@ public class UserService implements IService<User> {
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         userToFollow.getSubscribers().add(persistedUser);
         persistedUser.getSubscriptions().add(userToFollow);
-        return convertToFollowerDto(userToFollow);
+        return mapper.convertToFollowerDto(userToFollow);
     }
 
-    private FollowedUserDto convertToFollowerDto(User userToFollow) {
-        return FollowedUserDto.builder()
-                .user(convertToRegisteredDto(userToFollow))
-                .subscribers(userToFollow.getSubscribers().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
-                .subscriptions(userToFollow.getSubscriptions().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
-                .build();
-    }
 
     public PersonalCabinetDto getUserInfo() {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
-        return convertToPersonalCabinetDto(persistedUser);
+        return mapper.convertToPersonalCabinetDto(persistedUser);
     }
 
-    public PersonalCabinetDto convertToPersonalCabinetDto(User persistedUser) {
-        List<RegisteredUserDto> subscribers = persistedUser.getSubscribers()
-                .stream()
-                .map(this::convertToRegisteredDto)
-                .collect(Collectors.toList());
 
-        List<RegisteredUserDto> subscriptions = persistedUser.getSubscriptions()
-                .stream()
-                .map(this::convertToRegisteredDto)
-                .collect(Collectors.toList());
 
-        return PersonalCabinetDto.builder()
-                .id(persistedUser.getId())
-                .login(persistedUser.getLogin())
-                .firstName(persistedUser.getFirstName())
-                .secondName(persistedUser.getSecondName())
-                .email(persistedUser.getEmail())
-                .image(persistedUser.getImage())
-                .subscribers(subscribers.size())
-                .subscriptions(subscriptions.size())
-                .build();
-    }
 
-    public List<RegisteredUserDto> getSubscriptions(long id) {
-        return find(id).getSubscriptions()
-                .stream()
-                .map(this::convertToRegisteredDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<RegisteredUserDto> getSubscribers(long id) {
-        return find(id).getSubscribers()
-                .stream()
-                .map(this::convertToRegisteredDto)
-                .collect(Collectors.toList());
-    }
 }
