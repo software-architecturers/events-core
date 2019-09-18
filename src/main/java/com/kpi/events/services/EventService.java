@@ -9,6 +9,7 @@ import com.kpi.events.model.dto.EventDto;
 import com.kpi.events.model.dto.LocationDto;
 import com.kpi.events.model.dto.RegisteredUserDto;
 import com.kpi.events.model.mapper.EventMapper;
+import com.kpi.events.model.mapper.UserMapper;
 import com.kpi.events.model.repository.EventRepository;
 import com.kpi.events.model.repository.UserRepository;
 import org.hibernate.Session;
@@ -40,7 +41,7 @@ public class EventService /* implements IService<EventDto>*/ {
     private ImageService imageService;
 
     @Autowired
-    private UserService userService;
+    private UserMapper userMapper;
 
     //    @Override
     @Transactional
@@ -155,7 +156,7 @@ public class EventService /* implements IService<EventDto>*/ {
         return eventRepository
                 .findById(eventId)
                 .orElseThrow(RuntimeException::new).getVisitors()
-                .stream().map(user -> userService.convertToRegisteredDto(user))
+                .stream().map(user -> userMapper.convertToRegisteredDto(user))
                 .collect(Collectors.toList());
     }
 }

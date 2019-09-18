@@ -243,8 +243,4 @@ public class UserService implements IService<User> {
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         return mapper.convertToPersonalCabinetDto(persistedUser);
     }
-
-
-
-
 }
