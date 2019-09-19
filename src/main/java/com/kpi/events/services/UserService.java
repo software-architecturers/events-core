@@ -4,10 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
-import com.kpi.events.model.dto.FollowedUserDto;
-import com.kpi.events.model.dto.PersonalCabinetDto;
-import com.kpi.events.model.dto.RegisteredUserDto;
-import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
+import com.kpi.events.model.dtos.user.FullUserDto;
+import com.kpi.events.model.dtos.user.SmallUserDto;
+import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
 import com.kpi.events.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -60,8 +59,8 @@ public class UserService implements IService<User> {
         return repository.save(entity);
     }
 
-    public PersonalCabinetDto getUser(long id) {
-        return mapper.convertToPersonalCabinetDto(find(id));
+    public FullUserDto getUser(long id) {
+        return mapper.convertToFullUserDto(find(id));
     }
 
     @Override
@@ -206,14 +205,14 @@ public class UserService implements IService<User> {
                 .collect(Collectors.toList());
     }
 
-    public List<RegisteredUserDto> getSubscriptions(long id) {
+    public List<SmallUserDto> getSubscriptions(long id) {
         return find(id).getSubscriptions()
                 .stream()
                 .map(mapper::convertToRegisteredDto)
                 .collect(Collectors.toList());
     }
 
-    public List<RegisteredUserDto> getSubscribers(long id) {
+    public List<SmallUserDto> getSubscribers(long id) {
         return find(id).getSubscribers()
                 .stream()
                 .map(mapper::convertToRegisteredDto)
@@ -228,19 +227,19 @@ public class UserService implements IService<User> {
      * @return updated followed user
      */
     @Transactional
-    public FollowedUserDto subscribeOnUser(long userId) {
+    public FullUserDto subscribeOnUser(long userId) {
         User userToFollow = repository.findById(userId).orElseThrow(UserNotFoundException::new);
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         userToFollow.getSubscribers().add(persistedUser);
         persistedUser.getSubscriptions().add(userToFollow);
-        return mapper.convertToFollowerDto(userToFollow);
+        return mapper.convertToFullUserDto(userToFollow);
     }
 
 
-    public PersonalCabinetDto getUserInfo() {
+    public FullUserDto getUserInfo() {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
-        return mapper.convertToPersonalCabinetDto(persistedUser);
+        return mapper.convertToFullUserDto(persistedUser);
     }
 }

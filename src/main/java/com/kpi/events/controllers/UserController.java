@@ -1,9 +1,8 @@
 package com.kpi.events.controllers;
 
-import com.kpi.events.model.dto.FollowedUserDto;
-import com.kpi.events.model.dto.PersonalCabinetDto;
-import com.kpi.events.model.dto.RegisteredUserDto;
-import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
+import com.kpi.events.model.dtos.user.FullUserDto;
+import com.kpi.events.model.dtos.user.SmallUserDto;
+import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
 import com.kpi.events.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,27 +23,27 @@ public class UserController {
     }
 
     @PutMapping(path = "/subscribe/{id}")
-    public FollowedUserDto subscribe(@PathVariable("id") long userId) {
+    public FullUserDto subscribe(@PathVariable("id") long userId) {
         return userService.subscribeOnUser(userId);
     }
 
     @GetMapping(path = "users/me")
-    public PersonalCabinetDto getInfoAboutMe() {
+    public FullUserDto getInfoAboutMe() {
         return userService.getUserInfo();
     }
 
     @GetMapping(path = "users/{id}")
-    public PersonalCabinetDto getUser(@PathVariable long id) {
+    public FullUserDto getUser(@PathVariable long id) {
         return userService.getUser(id);
     }
 
     @GetMapping(path = "users/{id}/subscribers")
-    public List<RegisteredUserDto> getSubscribers(@PathVariable long id) {
+    public List<SmallUserDto> getSubscribers(@PathVariable long id) {
         return userService.getSubscribers(id);
     }
 
     @GetMapping(path = "users/{id}/subscriptions")
-    public List<RegisteredUserDto> getSubscriptions(@PathVariable long id) {
+    public List<SmallUserDto> getSubscriptions(@PathVariable long id) {
         return userService.getSubscriptions(id);
     }
 }

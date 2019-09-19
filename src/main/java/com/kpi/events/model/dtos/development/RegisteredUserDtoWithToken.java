@@ -1,6 +1,7 @@
-package com.kpi.events.model.dto;
+package com.kpi.events.model.dtos.development;
 
 import com.kpi.events.model.RefreshToken;
+import com.kpi.events.model.dtos.user.SmallUserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+//Class created for development reasons only
 public class RegisteredUserDtoWithToken {
-    RegisteredUserDto userDto;
+    SmallUserDto userDto;
     Set<RefreshToken> userToken;
 }

@@ -3,7 +3,9 @@ package com.kpi.events.model.mapper;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
-import com.kpi.events.model.dto.*;
+import com.kpi.events.model.dtos.event.EventDto;
+import com.kpi.events.model.dtos.user.FullUserDto;
+import com.kpi.events.model.dtos.user.SmallUserDto;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class EventMapper {
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .mine(checkIfMine(event, userRequester))
-                .creator(PersonalCabinetDto.builder()
+                .creator(FullUserDto.builder()
                         .id(event.getCreator().getId())
                         .login(event.getCreator().getLogin())
                         .email(event.getCreator().getEmail())
@@ -40,21 +42,20 @@ public class EventMapper {
                         .subscriptions(event.getCreator().getSubscriptions().size())
                         .build())
                 .visited(checkIfVisited(event, userRequester))
-                .visitors(new EventVisitorsDto(event.getVisitors()
+                .visitors(new EventDto.EventVisitorsDto(event.getVisitors()
                         .stream()
                         .limit(VISITORS_SHOWN_LIMIT)
                         .map(visitor ->
-                            PersonalCabinetDto.builder()
-                                    .login(visitor.getLogin())
-                                    .email(visitor.getEmail())
-                                    .firstName(visitor.getFirstName())
-                                    .secondName(visitor.getSecondName())
-                                    .subscribers(visitor.getSubscribers().size())
-                                    .subscriptions(visitor.getSubscriptions().size())
-                                    .build())
+                                SmallUserDto.builder()
+                                        .login(visitor.getLogin())
+                                        .email(visitor.getEmail())
+                                        .firstName(visitor.getFirstName())
+                                        .secondName(visitor.getSecondName())
+                                        .subscribers(visitor.getSubscribers().size())
+                                        .subscriptions(visitor.getSubscriptions().size())
+                                        .build())
                         .collect(Collectors.toSet()),
                         event.getVisitors().size()))
-
                 .build();
     }
 

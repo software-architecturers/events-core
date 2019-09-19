@@ -1,7 +1,7 @@
-package com.kpi.events.model.dto;
+package com.kpi.events.model.dtos.user;
 
 import com.kpi.events.model.Image;
-import com.kpi.events.model.User;
+import com.kpi.events.model.dtos.event.EventDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonalCabinetDto {
+public class FullUserDto {
     private long id;
 
     private String login;
@@ -29,6 +29,10 @@ public class PersonalCabinetDto {
     private Integer subscribers;
 
     private Integer subscriptions;
+
+    private List<EventDto> visitedEvents;
+
+    private List<EventDto> createdEvents;
 
 }
 

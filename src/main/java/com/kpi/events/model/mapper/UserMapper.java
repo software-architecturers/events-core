@@ -1,18 +1,15 @@
 package com.kpi.events.model.mapper;
 
 import com.kpi.events.model.User;
-import com.kpi.events.model.dto.FollowedUserDto;
-import com.kpi.events.model.dto.PersonalCabinetDto;
-import com.kpi.events.model.dto.RegisteredUserDto;
-import com.kpi.events.model.dto.RegisteredUserDtoWithToken;
+import com.kpi.events.model.dtos.user.FullUserDto;
+import com.kpi.events.model.dtos.user.SmallUserDto;
+import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
-    public PersonalCabinetDto convertToPersonalCabinetDto(User persistedUser) {
-        return PersonalCabinetDto.builder()
+    public FullUserDto convertToFullUserDto(User persistedUser) {
+        return FullUserDto.builder()
                 .id(persistedUser.getId())
                 .login(persistedUser.getLogin())
                 .firstName(persistedUser.getFirstName())
@@ -24,23 +21,13 @@ public class UserMapper {
                 .build();
     }
 
-
-    public FollowedUserDto convertToFollowerDto(User userToFollow) {
-        return FollowedUserDto.builder()
-                .user(convertToRegisteredDto(userToFollow))
-                .subscribers(userToFollow.getSubscribers().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
-                .subscriptions(userToFollow.getSubscriptions().stream().map(this::convertToRegisteredDto).collect(Collectors.toList()))
-                .build();
-    }
-
-    public RegisteredUserDto convertToRegisteredDto(User user) {
-        return RegisteredUserDto.builder()
+    public SmallUserDto convertToRegisteredDto(User user) {
+        return SmallUserDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .secondName(user.getSecondName())
                 .email(user.getEmail())
                 .login(user.getLogin())
-                .password(user.getPassword())
                 .build();
     }
 

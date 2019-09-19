@@ -1,8 +1,7 @@
 package com.kpi.events.controllers;
 
-import com.kpi.events.model.Event;
-import com.kpi.events.model.dto.EventDto;
-import com.kpi.events.model.dto.LocationDto;
+import com.kpi.events.model.dtos.event.EventDto;
+import com.kpi.events.model.dtos.location.LocationDto;
 import com.kpi.events.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

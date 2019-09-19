@@ -5,9 +5,9 @@ import com.kpi.events.exceptions.UserNotFoundException;
 import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
-import com.kpi.events.model.dto.EventDto;
-import com.kpi.events.model.dto.LocationDto;
-import com.kpi.events.model.dto.RegisteredUserDto;
+import com.kpi.events.model.dtos.event.EventDto;
+import com.kpi.events.model.dtos.location.LocationDto;
+import com.kpi.events.model.dtos.user.SmallUserDto;
 import com.kpi.events.model.mapper.EventMapper;
 import com.kpi.events.model.mapper.UserMapper;
 import com.kpi.events.model.repository.EventRepository;
@@ -152,7 +152,7 @@ public class EventService /* implements IService<EventDto>*/ {
         }
     }
 
-    public List<RegisteredUserDto> getEventVisitors(long eventId) {
+    public List<SmallUserDto> getEventVisitors(long eventId) {
         return eventRepository
                 .findById(eventId)
                 .orElseThrow(RuntimeException::new).getVisitors()

@@ -1,6 +1,6 @@
 package com.kpi.events.model;
 
-import com.kpi.events.model.dto.LocationDto;
+import com.kpi.events.model.dtos.location.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
