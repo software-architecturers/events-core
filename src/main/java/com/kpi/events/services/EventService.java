@@ -96,10 +96,10 @@ public class EventService /* implements IService<EventDto>*/ {
     }
 
     @Transactional
-    public List<EventDto> searchEventLIKEGOOGLE(String searchWord) {
+    public List<EventDto> searchEventLIKEGOOGLE(String searchWord, int limit, int page) {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
-        return eventRepository.findEventByDescriptionContainingOrTitleContaining(searchWord, searchWord)
+        return eventRepository.searchEvents(searchWord.toUpperCase(), PageRequest.of(page, limit))
                 .stream()
                 .map(event -> eventMapper.convertToDto(event, persistedUser))
                 .collect(Collectors.toList());

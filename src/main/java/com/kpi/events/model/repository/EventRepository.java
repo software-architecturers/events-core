@@ -2,6 +2,7 @@ package com.kpi.events.model.repository;
 
 import com.kpi.events.model.Event;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,12 +11,13 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findEventByDescriptionContainingOrTitleContaining(String search, String searchInTitle);
+    @Query(value = "from Event where upper(title) like %:search% or upper(description) like %:search%")
+    List<Event> searchEvents(String search, Pageable pageable);
 
-    @Query(value = "select * from events_table where latitude between ?1 AND ?2  AND longitude between  ?3 AND ?4",
+    @Query(value = "select * from events_table where latitude between ?1 and ?2 and longitude between ?3 and ?4",
             nativeQuery = true)
     List<Event> findAllByLocation(BigDecimal leftLatitude, BigDecimal rightLatitude,
-                                  BigDecimal leftLongitude , BigDecimal rightLongitude );
+                                  BigDecimal leftLongitude , BigDecimal rightLongitude);
 
 
 }

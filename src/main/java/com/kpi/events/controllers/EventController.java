@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api")
 @ConditionalOnProperty(name = "features.events.common")
@@ -38,9 +37,11 @@ public class EventController {
         return service.likeEvent(user, eventId);
     }
 
-    @GetMapping(path = "/events/find/q={search}")
-    public List<EventDto> searchEvents(@PathVariable("search") String search) {
-        return service.searchEventLIKEGOOGLE(search);
+    @GetMapping(path = "/events/find")
+    public List<EventDto> searchEvents(@RequestParam("q") String search,
+                                       @RequestParam(required = false, defaultValue = "10") int limit,
+                                       @RequestParam(required = false, defaultValue = "0") int page) {
+        return service.searchEventLIKEGOOGLE(search, limit, page);
     }
 
     @PutMapping("/events/visit/{id}")
