@@ -22,6 +22,13 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping(path = "/users/find")
+    public List<FullUserDto> findUsers(@RequestParam("q") String search,
+                                       @RequestParam(required = false, defaultValue = "10") int limit,
+                                       @RequestParam(required = false, defaultValue = "0") int page) {
+        return userService.find(search, page, limit);
+    }
+
     @PutMapping(path = "/subscribe/{id}")
     public FullUserDto subscribe(@PathVariable("id") long userId) {
         return userService.subscribeOnUser(userId);

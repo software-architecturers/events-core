@@ -42,7 +42,7 @@ public class UserService implements IService<User> {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserMapper mapper;
+    private UserMapper userMapper;
 
     @Override
     public List<User> findAll(int size, int page) {
@@ -60,7 +60,7 @@ public class UserService implements IService<User> {
     }
 
     public FullUserDto getUser(long id) {
-        return mapper.convertToFullUserDto(find(id));
+        return userMapper.convertToFullUserDto(find(id));
     }
 
     @Override
@@ -201,21 +201,21 @@ public class UserService implements IService<User> {
     public List<RegisteredUserDtoWithToken> getUsers() {
         return repository.findAll()
                 .stream()
-                .map(mapper::convertToRegisteredUserDtoWithToken)
+                .map(userMapper::convertToRegisteredUserDtoWithToken)
                 .collect(Collectors.toList());
     }
 
     public List<SmallUserDto> getSubscriptions(long id) {
         return find(id).getSubscriptions()
                 .stream()
-                .map(mapper::convertToRegisteredDto)
+                .map(userMapper::convertToRegisteredDto)
                 .collect(Collectors.toList());
     }
 
     public List<SmallUserDto> getSubscribers(long id) {
         return find(id).getSubscribers()
                 .stream()
-                .map(mapper::convertToRegisteredDto)
+                .map(userMapper::convertToRegisteredDto)
                 .collect(Collectors.toList());
     }
 
@@ -233,13 +233,20 @@ public class UserService implements IService<User> {
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         userToFollow.getSubscribers().add(persistedUser);
         persistedUser.getSubscriptions().add(userToFollow);
-        return mapper.convertToFullUserDto(userToFollow);
+        return userMapper.convertToFullUserDto(userToFollow);
     }
 
 
     public FullUserDto getUserInfo() {
         User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
-        return mapper.convertToFullUserDto(persistedUser);
+        return userMapper.convertToFullUserDto(persistedUser);
+    }
+
+    public List<FullUserDto> find(String search, int page, int limit) {
+        return repository.searchUsers(search.toUpperCase(), PageRequest.of(page, limit))
+                .stream()
+                .map(user -> userMapper.convertToFullUserDto(user))
+                .collect(Collectors.toList());
     }
 }
