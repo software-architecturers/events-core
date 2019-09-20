@@ -55,7 +55,7 @@ public class EventService {
 
         return eventRepository.findAll(PageRequest.of(page, size)).getContent()
                 .stream()
-                .map(event -> eventMapper.convertToDto(event, persistedUser))
+                .map(event -> eventMapper.convertToEventDto(event, persistedUser))
                 .collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class EventService {
 
         User persistedUser = userRepository.findByLogin(creator.getLogin()).orElseThrow(UserNotFoundException::new);
         entity.setCreator(persistedUser);
-        return eventMapper.convertToDto(eventRepository.save(entity), persistedUser);
+        return eventMapper.convertToEventDto(eventRepository.save(entity), persistedUser);
 
     }
 
@@ -107,7 +107,7 @@ public class EventService {
                 .orElseThrow(UserNotFoundException::new);
         return eventRepository.searchEvents(searchWord.toUpperCase(), PageRequest.of(page, limit))
                 .stream()
-                .map(event -> eventMapper.convertToDto(event, persistedUser))
+                .map(event -> eventMapper.convertToEventDto(event, persistedUser))
                 .collect(Collectors.toList());
     }
 
@@ -119,7 +119,7 @@ public class EventService {
                 .findAllByLocation(
                         leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
                         leftBotPoint.getLongitude(), rightTopPoint.getLongitude())
-                .stream().map(event -> eventMapper.convertToDto(event, persistedUser)).collect(Collectors.toList());
+                .stream().map(event -> eventMapper.convertToEventDto(event, persistedUser)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -128,7 +128,7 @@ public class EventService {
                 .orElseThrow(RuntimeException::new);
         User persistedUser = userRepository.findByLogin(user.getLogin()).orElseThrow(UserNotFoundException::new);
         setOrDeleteLike(eventToLike, persistedUser);
-        return eventMapper.convertToDto(eventToLike, persistedUser);
+        return eventMapper.convertToEventDto(eventToLike, persistedUser);
     }
 
     @Transactional
@@ -137,7 +137,7 @@ public class EventService {
                 .orElseThrow(RuntimeException::new);
         User persistedUser = userRepository.findByLogin(user.getLogin()).orElseThrow(UserNotFoundException::new);
         setOrDeleteVisit(eventToVisit, persistedUser);
-        return eventMapper.convertToDto(eventToVisit, persistedUser);
+        return eventMapper.convertToEventDto(eventToVisit, persistedUser);
     }
 
     private void setOrDeleteLike(Event eventToLike, User persistedUser) {

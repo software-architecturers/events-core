@@ -262,7 +262,7 @@ public class UserService implements IService<User> {
                 .orElseThrow(UserNotFoundException::new);
         return user.getVisitedEvents()
                 .stream()
-                .map(event -> eventMapper.convertToDto(event, user))
+                .map(event -> eventMapper.convertToEventDto(event, user))
                 .sorted(Comparator.comparing(EventDto::getStartDate))
                 .collect(Collectors.toList());
     }
@@ -272,7 +272,7 @@ public class UserService implements IService<User> {
                 .orElseThrow(UserNotFoundException::new);
         return user.getCreatedEvents()
                 .stream()
-                .map(event -> eventMapper.convertToDto(event, user))
+                .map(event -> eventMapper.convertToEventDto(event, user))
                 .sorted(Comparator.comparing(EventDto::getStartDate))
                 .collect(Collectors.toList());
     }

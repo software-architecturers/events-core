@@ -1,7 +1,7 @@
 package com.kpi.events.model.dtos.user;
 
 import com.kpi.events.model.Image;
-import com.kpi.events.model.dtos.event.EventDto;
+import com.kpi.events.model.dtos.event.SmallEventDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +16,8 @@ import java.util.List;
 public class FullUserDto {
     private long id;
 
+    private Image image;
+
     private String login;
 
     private String email;
@@ -24,20 +26,46 @@ public class FullUserDto {
 
     private String secondName;
 
-    private Image image;
-
-    private Integer subscribersCount;
-
-    private Integer subscriptionsCount;
-
-    private List<SmallUserDto> subscribers;
-
-    private List<SmallUserDto> subscriptions;
-
-    private List<EventDto> visitedEvents;
-
-    private List<EventDto> createdEvents;
-
     private boolean subscribed;
+
+    private UserSubscribersDto subscribers;
+
+    private UserSubscriptionsDto subscriptions;
+
+    private VisitedEventDto visitedEvents;
+
+    private CreatedEventsDto createdEvents;
+
+    @Data
+    @Builder
+    public static class CreatedEventsDto {
+        private Integer count;
+
+        private List<SmallEventDto> events;
+    }
+
+    @Data
+    @Builder
+    public static class VisitedEventDto {
+        private Integer count;
+
+        private List<SmallEventDto> events;
+    }
+
+    @Data
+    @Builder
+    public static class UserSubscribersDto {
+        private Integer count;
+
+        private List<SmallUserDto> users;
+    }
+
+    @Data
+    @Builder
+    public static class UserSubscriptionsDto {
+        private Integer count;
+
+        private List<SmallUserDto> users;
+    }
 }
 

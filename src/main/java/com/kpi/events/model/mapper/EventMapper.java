@@ -4,10 +4,11 @@ import com.kpi.events.model.Event;
 import com.kpi.events.model.Image;
 import com.kpi.events.model.User;
 import com.kpi.events.model.dtos.event.EventDto;
-import com.kpi.events.model.dtos.user.FullUserDto;
-import com.kpi.events.model.dtos.user.SmallUserDto;
+import com.kpi.events.model.dtos.event.SmallEventDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,8 +16,11 @@ public class EventMapper {
 
     private static final int VISITORS_SHOWN_LIMIT = 3;
 
+    @Autowired
+    private UserMapper userMapper;
 
-    public EventDto convertToDto(Event event, User userRequester) {
+
+    public EventDto convertToEventDto(Event event, User userRequester) {
         return EventDto.builder()
                 .id(event.getId())
                 .description(event.getDescription())
@@ -26,36 +30,44 @@ public class EventMapper {
                         .collect(Collectors.toList()))
                 .title(event.getTitle())
                 .likes(event.getLikes().size())
-                .locationDto(event.getLocation())
+                .location(event.getLocation())
                 .liked(checkIfLiked(event, userRequester))
                 .creationDate(event.getCreationDate())
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .mine(checkIfMine(event, userRequester))
-                .creator(FullUserDto.builder()
-                        .id(event.getCreator().getId())
-                        .login(event.getCreator().getLogin())
-                        .email(event.getCreator().getEmail())
-                        .firstName(event.getCreator().getFirstName())
-                        .secondName(event.getCreator().getSecondName())
-                        .subscribers(event.getCreator().getSubscribers().size())
-                        .subscriptions(event.getCreator().getSubscriptions().size())
-                        .build())
+                .creator(userMapper.convertToSmallUserDto(event.getCreator()))
                 .visited(checkIfVisited(event, userRequester))
-                .visitors(new EventDto.EventVisitorsDto(event.getVisitors()
+                .visitors(EventDto.EventVisitorsDto.builder()
+                        .users(event.getVisitors()
+                                .stream()
+                                .sorted(Comparator.comparingInt(user -> user.getCreatedEvents().size()))
+                                .map(visitor -> userMapper.convertToSmallUserDto(visitor))
+                                .limit(VISITORS_SHOWN_LIMIT)
+                                .collect(Collectors.toList()))
+                        .count(event.getVisitors().size())
+                        .build())
+                .build();
+    }
+
+
+    public SmallEventDto convertToSmallEventDto(Event event, User userRequester) {
+
+        return SmallEventDto.builder()
+                .id(event.getId())
+                .description(event.getDescription())
+                .imagesLinks(event.getImages()
                         .stream()
-                        .limit(VISITORS_SHOWN_LIMIT)
-                        .map(visitor ->
-                                SmallUserDto.builder()
-                                        .login(visitor.getLogin())
-                                        .email(visitor.getEmail())
-                                        .firstName(visitor.getFirstName())
-                                        .secondName(visitor.getSecondName())
-                                        .subscribers(visitor.getSubscribers().size())
-                                        .subscriptions(visitor.getSubscriptions().size())
-                                        .build())
-                        .collect(Collectors.toSet()),
-                        event.getVisitors().size()))
+                        .map(Image::getLink)
+                        .collect(Collectors.toList()))
+                .title(event.getTitle())
+                .likes(event.getLikes().size())
+                .liked(checkIfLiked(event, userRequester))
+                .startDate(event.getStartDate())
+                .endDate(event.getEndDate())
+                .mine(checkIfMine(event, userRequester))
+                .creator(userMapper.convertToSmallUserDto(event.getCreator()))
+                .visited(checkIfVisited(event, userRequester))
                 .build();
     }
 
