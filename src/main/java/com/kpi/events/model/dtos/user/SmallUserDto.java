@@ -26,4 +26,6 @@ public class SmallUserDto {
     private Integer subscribers;
 
     private Integer subscriptions;
+
+    private boolean subscribed;
 }

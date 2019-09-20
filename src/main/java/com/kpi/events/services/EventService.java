@@ -160,7 +160,7 @@ public class EventService /* implements IService<EventDto>*/ {
         return eventRepository
                 .findById(eventId)
                 .orElseThrow(RuntimeException::new).getVisitors()
-                .stream().map(user -> userMapper.convertToRegisteredDto(user))
+                .stream().map(user -> userMapper.convertToSmallUserDto(user))
                 .collect(Collectors.toList());
     }
 }

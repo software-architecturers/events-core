@@ -17,7 +17,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "select * from events_table where latitude between ?1 and ?2 and longitude between ?3 and ?4",
             nativeQuery = true)
     List<Event> findAllByLocation(BigDecimal leftLatitude, BigDecimal rightLatitude,
-                                  BigDecimal leftLongitude , BigDecimal rightLongitude);
-
+                                  BigDecimal leftLongitude, BigDecimal rightLongitude);
 
 }

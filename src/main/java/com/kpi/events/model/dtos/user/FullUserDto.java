@@ -34,5 +34,6 @@ public class FullUserDto {
 
     private List<EventDto> createdEvents;
 
+    private boolean subscribed;
 }
 

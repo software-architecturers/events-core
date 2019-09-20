@@ -208,14 +208,14 @@ public class UserService implements IService<User> {
     public List<SmallUserDto> getSubscriptions(long id) {
         return find(id).getSubscriptions()
                 .stream()
-                .map(userMapper::convertToRegisteredDto)
+                .map(userMapper::convertToSmallUserDto)
                 .collect(Collectors.toList());
     }
 
     public List<SmallUserDto> getSubscribers(long id) {
         return find(id).getSubscribers()
                 .stream()
-                .map(userMapper::convertToRegisteredDto)
+                .map(userMapper::convertToSmallUserDto)
                 .collect(Collectors.toList());
     }
 
