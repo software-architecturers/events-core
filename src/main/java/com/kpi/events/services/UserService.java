@@ -4,9 +4,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
+import com.kpi.events.model.dtos.event.EventDto;
 import com.kpi.events.model.dtos.user.FullUserDto;
 import com.kpi.events.model.dtos.user.SmallUserDto;
 import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
+import com.kpi.events.model.mapper.EventMapper;
 import com.kpi.events.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +45,9 @@ public class UserService implements IService<User> {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Override
     public List<User> findAll(int size, int page) {
@@ -229,7 +234,7 @@ public class UserService implements IService<User> {
     @Transactional
     public FullUserDto subscribeOnUser(long userId) {
         User userToFollow = repository.findById(userId).orElseThrow(UserNotFoundException::new);
-        User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userRequester = getRequester();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         userToFollow.getSubscribers().add(persistedUser);
         persistedUser.getSubscriptions().add(userToFollow);
@@ -238,7 +243,7 @@ public class UserService implements IService<User> {
 
 
     public FullUserDto getUserInfo() {
-        User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userRequester = getRequester();
         User persistedUser = repository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
         return userMapper.convertToFullUserDto(persistedUser);
     }
@@ -247,6 +252,30 @@ public class UserService implements IService<User> {
         return repository.searchUsers(search.toUpperCase(), PageRequest.of(page, limit))
                 .stream()
                 .map(user -> userMapper.convertToFullUserDto(user))
+                .collect(Collectors.toList());
+    }
+
+    public User getRequester() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public List<EventDto> getEventsWillVisit(long id) {
+        User user = repository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return user.getVisitedEvents()
+                .stream()
+                .map(event -> eventMapper.convertToDto(event, user))
+                .sorted(Comparator.comparing(EventDto::getStartDate))
+                .collect(Collectors.toList());
+    }
+
+    public List<EventDto> getCreatedEvents(long id) {
+        User user = repository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return user.getCreatedEvents()
+                .stream()
+                .map(event -> eventMapper.convertToDto(event, user))
+                .sorted(Comparator.comparing(EventDto::getStartDate))
                 .collect(Collectors.toList());
     }
 }

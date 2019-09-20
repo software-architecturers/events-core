@@ -1,6 +1,7 @@
 package com.kpi.events.model.mapper;
 
 import com.kpi.events.model.User;
+import com.kpi.events.model.dtos.event.EventDto;
 import com.kpi.events.model.dtos.user.FullUserDto;
 import com.kpi.events.model.dtos.user.SmallUserDto;
 import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
@@ -8,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
+
+    private static final int SHOWN_LIMIT = 3;
 
     @Autowired
     private EventMapper eventMapper;
@@ -30,10 +34,14 @@ public class UserMapper {
                 .createdEvents(user.getCreatedEvents()
                         .stream()
                         .map(event -> eventMapper.convertToDto(event, user))
+                        .sorted(Comparator.comparing(EventDto::getCreationDate))
+                        .limit(SHOWN_LIMIT)
                         .collect(Collectors.toList()))
                 .visitedEvents(user.getVisitedEvents()
                         .stream()
                         .map(event -> eventMapper.convertToDto(event, user))
+                        .sorted(Comparator.comparing(EventDto::getStartDate))
+                        .limit(SHOWN_LIMIT)
                         .collect(Collectors.toList()))
                 .build();
     }

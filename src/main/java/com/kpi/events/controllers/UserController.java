@@ -1,5 +1,6 @@
 package com.kpi.events.controllers;
 
+import com.kpi.events.model.dtos.event.EventDto;
 import com.kpi.events.model.dtos.user.FullUserDto;
 import com.kpi.events.model.dtos.user.SmallUserDto;
 import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
@@ -39,9 +40,31 @@ public class UserController {
         return userService.getUserInfo();
     }
 
+    @GetMapping(path = "users/me/created-events")
+    public List<EventDto> getMyCreatedEvents() {
+        long id = userService.getRequester().getId();
+        return userService.getCreatedEvents(id);
+    }
+
+    @GetMapping(path = "users/me/events-will-visit")
+    public List<EventDto> getMyEventsWillVisit() {
+        long id = userService.getRequester().getId();
+        return userService.getEventsWillVisit(id);
+    }
+
+    @GetMapping(path = "users/{id}/created-events")
+    public List<EventDto> getUserCreatedEvents(@PathVariable("id") long userId) {
+        return userService.getCreatedEvents(userId);
+    }
+
+    @GetMapping(path = "users/{id}/events-will-visit")
+    public List<EventDto> getUserEventsWillVisit(@PathVariable("id") long userId) {
+        return userService.getEventsWillVisit(userId);
+    }
+
     @GetMapping(path = "users/{id}")
-    public FullUserDto getUser(@PathVariable long id) {
-        return userService.getUser(id);
+    public FullUserDto getUser(@PathVariable("id") long userId) {
+        return userService.getUser(userId);
     }
 
     @GetMapping(path = "users/{id}/subscribers")

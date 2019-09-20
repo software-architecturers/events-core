@@ -43,10 +43,13 @@ public class EventService /* implements IService<EventDto>*/ {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+
     //    @Override
     @Transactional
     public List<EventDto> findAll(int size, int page) {
-        User userRequester = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userRequester =userService.getRequester();
         User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
 
         return eventRepository.findAll(PageRequest.of(page, size)).getContent()
