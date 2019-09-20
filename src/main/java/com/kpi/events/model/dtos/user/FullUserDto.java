@@ -26,9 +26,13 @@ public class FullUserDto {
 
     private Image image;
 
-    private Integer subscribers;
+    private Integer subscribersCount;
 
-    private Integer subscriptions;
+    private Integer subscriptionsCount;
+
+    private List<SmallUserDto> subscribers;
+
+    private List<SmallUserDto> subscriptions;
 
     private List<EventDto> visitedEvents;
 
