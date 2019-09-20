@@ -14,7 +14,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "from Event where upper(title) like %:search% or upper(description) like %:search%")
     List<Event> searchEvents(String search, Pageable pageable);
 
-    @Query(value = "select * from events_table where latitude between ?1 and ?2 and longitude between ?3 and ?4",
+    @Query(value = "select * from events_table where latitude between ?1 and ?2 and longitude between ?3 and ?4 and start_date > current_timestamp order by start_date",
             nativeQuery = true)
     List<Event> findAllByLocation(BigDecimal leftLatitude, BigDecimal rightLatitude,
                                   BigDecimal leftLongitude, BigDecimal rightLongitude);
