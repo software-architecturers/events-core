@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static com.kpi.events.utils.Constants.WRONG_INDEX;
 
 @Service
-public class EventService /* implements IService<EventDto>*/ {
+public class EventService {
 
     @Autowired
     private EventMapper eventMapper;
@@ -46,11 +46,12 @@ public class EventService /* implements IService<EventDto>*/ {
     @Autowired
     private UserService userService;
 
-    //    @Override
+
     @Transactional
     public List<EventDto> findAll(int size, int page) {
-        User userRequester =userService.getRequester();
-        User persistedUser = userRepository.findByLogin(userRequester.getLogin()).orElseThrow(UserNotFoundException::new);
+        User userRequester = userService.getRequester();
+        User persistedUser = userRepository.findById(userRequester.getId())
+                .orElseThrow(UserNotFoundException::new);
 
         return eventRepository.findAll(PageRequest.of(page, size)).getContent()
                 .stream()
@@ -81,7 +82,6 @@ public class EventService /* implements IService<EventDto>*/ {
                         new IllegalArgumentException(String.format(WRONG_INDEX, id)));
     }
 
-    //    @Override
     public Event update(long id, Event entity) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -92,7 +92,6 @@ public class EventService /* implements IService<EventDto>*/ {
         return entity;
     }
 
-    //    @Override
     @Transactional
     public void delete(long id) {
         eventRepository.deleteById(id);
@@ -120,7 +119,7 @@ public class EventService /* implements IService<EventDto>*/ {
                 .findAllByLocation(
                         leftBotPoint.getLatitude(), rightTopPoint.getLatitude(),
                         leftBotPoint.getLongitude(), rightTopPoint.getLongitude())
-                .stream().map(event-> eventMapper.convertToDto(event, persistedUser)).collect(Collectors.toList());
+                .stream().map(event -> eventMapper.convertToDto(event, persistedUser)).collect(Collectors.toList());
     }
 
     @Transactional

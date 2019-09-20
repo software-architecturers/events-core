@@ -85,12 +85,7 @@ public class UserService implements IService<User> {
 
     }
 
-    public User find(String name) {
-        return repository.findByLogin(name)
-                .orElseThrow(() -> new RuntimeException("No user with given login exists"));
-
-    }
-
+    @Transactional
     public TokenResponse login(User user) {
         User persistedUser = repository
                 .findByLogin(user.getLogin())
@@ -116,6 +111,7 @@ public class UserService implements IService<User> {
 
     }
 
+    @Transactional
     public void register(RegisterDTO user) {
         if (!user.getConfirmPassword().equals(user.getPassword())) {
             throw new RuntimeException("Password is incorrect");
@@ -133,6 +129,7 @@ public class UserService implements IService<User> {
         save(userEntity);
     }
 
+    @Transactional
     public User findByRefreshToken(RefreshToken tokenIn) {
 
         long id = 0;
@@ -170,6 +167,7 @@ public class UserService implements IService<User> {
         return user;
     }
 
+    @Transactional
     public TokenResponse refresh(RefreshToken tokenIn) {
 
 
