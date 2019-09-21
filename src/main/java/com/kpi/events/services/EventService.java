@@ -14,7 +14,7 @@ import com.kpi.events.model.repository.EventRepository;
 import com.kpi.events.model.repository.UserRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +48,12 @@ public class EventService {
 
 
     @Transactional
-    public List<EventDto> findAll(int size, int page) {
+    public List<EventDto> findAll(Pageable pageable) {
         User userRequester = userService.getRequester();
         User persistedUser = userRepository.findById(userRequester.getId())
                 .orElseThrow(UserNotFoundException::new);
 
-        return eventRepository.findAll(PageRequest.of(page, size)).getContent()
+        return eventRepository.findAll(pageable).getContent()
                 .stream()
                 .map(event -> eventMapper.convertToEventDto(event, persistedUser))
                 .collect(Collectors.toList());
@@ -76,20 +76,21 @@ public class EventService {
     }
 
     @Transactional
-    public Event find(long id) {
-        return eventRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(String.format(WRONG_INDEX, id)));
+    public EventDto find(long id) {
+        return eventMapper.convertToEventDto(
+                eventRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException(String.format(WRONG_INDEX, id))),
+                userService.getRequester());
     }
 
-    public Event update(long id, Event entity) {
+    public EventDto update(long id, Event entity) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.update(entity);
         session.getTransaction().commit();
         session.close();
         entity.setId(id);
-        return entity;
+        return eventMapper.convertToEventDto(entity, userService.getRequester());
     }
 
     @Transactional
@@ -98,14 +99,14 @@ public class EventService {
     }
 
     @Transactional
-    public List<EventDto> searchEventLIKEGOOGLE(String searchWord, int limit, int page) {
+    public List<EventDto> searchEventLIKEGOOGLE(String searchWord, Pageable pageable) {
         User userRequester = (User) SecurityContextHolder
                 .getContext()
                 .getAuthentication().getPrincipal();
         User persistedUser = userRepository
                 .findByLogin(userRequester.getLogin())
                 .orElseThrow(UserNotFoundException::new);
-        return eventRepository.searchEvents(searchWord.toUpperCase(), PageRequest.of(page, limit))
+        return eventRepository.searchEvents(searchWord.toUpperCase(), pageable)
                 .stream()
                 .map(event -> eventMapper.convertToEventDto(event, persistedUser))
                 .collect(Collectors.toList());
@@ -140,6 +141,16 @@ public class EventService {
         return eventMapper.convertToEventDto(eventToVisit, persistedUser);
     }
 
+    @Transactional
+    public List<SmallUserDto> getEventVisitors(long eventId) {
+        return eventRepository
+                .findById(eventId)
+                .orElseThrow(RuntimeException::new).getVisitors()
+                .stream()
+                .map(user -> userMapper.convertToSmallUserDto(user))
+                .collect(Collectors.toList());
+    }
+
     private void setOrDeleteLike(Event eventToLike, User persistedUser) {
         Set<User> likes = eventToLike.getLikes();
         if (likes.contains(persistedUser)) {
@@ -156,13 +167,5 @@ public class EventService {
         } else {
             visitors.add(persistedUser);
         }
-    }
-
-    public List<SmallUserDto> getEventVisitors(long eventId) {
-        return eventRepository
-                .findById(eventId)
-                .orElseThrow(RuntimeException::new).getVisitors()
-                .stream().map(user -> userMapper.convertToSmallUserDto(user))
-                .collect(Collectors.toList());
     }
 }

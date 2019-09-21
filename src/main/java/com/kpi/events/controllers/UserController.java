@@ -6,6 +6,7 @@ import com.kpi.events.model.dtos.user.SmallUserDto;
 import com.kpi.events.model.dtos.development.RegisteredUserDtoWithToken;
 import com.kpi.events.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,25 +20,13 @@ public class UserController {
 
 
     @GetMapping(path = "/users")
-    public List<RegisteredUserDtoWithToken> getRegisteredUsers() {
-        return userService.getUsers();
+    public List<RegisteredUserDtoWithToken> getRegisteredUsers(Pageable pageable) {
+        return userService.getUsers(pageable);
     }
 
     @GetMapping(path = "/users/find")
-    public List<FullUserDto> findUsers(@RequestParam("q") String search,
-                                       @RequestParam(required = false, defaultValue = "10") int limit,
-                                       @RequestParam(required = false, defaultValue = "0") int page) {
-        return userService.find(search, page, limit);
-    }
-
-    @PutMapping(path = "/subscribe/{id}")
-    public FullUserDto subscribe(@PathVariable("id") long userId) {
-        return userService.subscribeOnUser(userId);
-    }
-
-    @GetMapping(path = "users/me")
-    public FullUserDto getInfoAboutMe() {
-        return userService.getUserInfo();
+    public List<FullUserDto> findUsers(@RequestParam("q") String search, Pageable pageable) {
+        return userService.find(search, pageable);
     }
 
     @GetMapping(path = "users/me/created-events")
@@ -62,11 +51,6 @@ public class UserController {
         return userService.getEventsWillVisit(userId);
     }
 
-    @GetMapping(path = "users/{id}")
-    public FullUserDto getUser(@PathVariable("id") long userId) {
-        return userService.getUser(userId);
-    }
-
     @GetMapping(path = "users/{id}/subscribers")
     public List<SmallUserDto> getSubscribers(@PathVariable long id) {
         return userService.getSubscribers(id);
@@ -75,5 +59,20 @@ public class UserController {
     @GetMapping(path = "users/{id}/subscriptions")
     public List<SmallUserDto> getSubscriptions(@PathVariable long id) {
         return userService.getSubscriptions(id);
+    }
+
+    @PutMapping(path = "/subscribe/{id}")
+    public FullUserDto subscribe(@PathVariable("id") long userId) {
+        return userService.subscribeOnUser(userId);
+    }
+
+    @GetMapping(path = "users/me")
+    public FullUserDto getInfoAboutMe() {
+        return userService.getUserInfo();
+    }
+
+    @GetMapping(path = "users/{id}")
+    public FullUserDto getUser(@PathVariable("id") long userId) {
+        return userService.getUser(userId);
     }
 }

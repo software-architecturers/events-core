@@ -12,6 +12,7 @@ import com.kpi.events.model.mapper.EventMapper;
 import com.kpi.events.model.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -201,8 +202,8 @@ public class UserService implements IService<User> {
         return encoder.encode(s);
     }
 
-    public List<RegisteredUserDtoWithToken> getUsers() {
-        return repository.findAll()
+    public List<RegisteredUserDtoWithToken> getUsers(Pageable pageable) {
+        return repository.findAll(pageable)
                 .stream()
                 .map(userMapper::convertToRegisteredUserDtoWithToken)
                 .collect(Collectors.toList());
@@ -246,8 +247,8 @@ public class UserService implements IService<User> {
         return userMapper.convertToFullUserDto(persistedUser);
     }
 
-    public List<FullUserDto> find(String search, int page, int limit) {
-        return repository.searchUsers(search.toUpperCase(), PageRequest.of(page, limit))
+    public List<FullUserDto> find(String search, Pageable pageable) {
+        return repository.searchUsers(search.toUpperCase(), pageable)
                 .stream()
                 .map(user -> userMapper.convertToFullUserDto(user))
                 .collect(Collectors.toList());
