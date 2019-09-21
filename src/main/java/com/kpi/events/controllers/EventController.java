@@ -26,7 +26,7 @@ public class EventController {
 
     @GetMapping("/events")
     public List<EventDto> getEvents(Pageable pageable) {
-        return service.findAll(pageable);
+        return service.findAllFutureEvents(pageable);
     }
 
     @GetMapping(path = "/events/{id}")

@@ -48,12 +48,12 @@ public class EventService {
 
 
     @Transactional
-    public List<EventDto> findAll(Pageable pageable) {
+    public List<EventDto> findAllFutureEvents(Pageable pageable) {
         User userRequester = userService.getRequester();
         User persistedUser = userRepository.findById(userRequester.getId())
                 .orElseThrow(UserNotFoundException::new);
 
-        return eventRepository.findAll(pageable).getContent()
+        return eventRepository.findAllByStartDateGreaterThan(LocalDateTime.now(), pageable)
                 .stream()
                 .map(event -> eventMapper.convertToEventDto(event, persistedUser))
                 .collect(Collectors.toList());
