@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.kpi.events.exceptions.UserNotFoundException;
+import com.kpi.events.model.Image;
 import com.kpi.events.model.dtos.event.EventDto;
 import com.kpi.events.model.dtos.user.FullUserDto;
 import com.kpi.events.model.dtos.user.SmallUserDto;
@@ -37,6 +38,9 @@ public class UserService implements IService<User> {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -117,7 +121,7 @@ public class UserService implements IService<User> {
         if (!user.getConfirmPassword().equals(user.getPassword())) {
             throw new RuntimeException("Password is incorrect");
         }
-
+        Image image = imageService.find(user.getImage().getId());
         User userEntity = User.builder()
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -125,6 +129,7 @@ public class UserService implements IService<User> {
                 .login(user.getLogin())
                 .password(encode(user.getPassword()))
                 .priveleges(Arrays.asList("READ_EVENTS", "WRITE_EVENTS"))
+                .image(image)
                 .build();
 
         save(userEntity);
